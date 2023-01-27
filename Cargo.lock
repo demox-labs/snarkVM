@@ -2523,6 +2523,7 @@ dependencies = [
  "getrandom",
  "rand",
  "serde",
+ "snarkvm-circuit",
  "snarkvm-console",
  "snarkvm-curves",
  "snarkvm-fields",
