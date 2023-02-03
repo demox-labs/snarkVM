@@ -18,6 +18,7 @@ pub mod genesis;
 pub use genesis::*;
 
 pub mod powers;
+use indexmap::IndexMap;
 pub use powers::*;
 
 const REMOTE_URL: &str = "https://testnet3.parameters.aleo.org";
@@ -60,21 +61,84 @@ impl_local!(NegBeta, "resources/", "neg-powers-of-beta", "usrs");
 // Negative Powers of Beta in G2
 impl_local!(BetaH, "resources/", "beta-h", "usrs");
 
-// Mint
-impl_remote!(MintProver, REMOTE_URL, "resources/", "mint", "prover");
-impl_remote!(MintVerifier, REMOTE_URL, "resources/", "mint", "verifier");
-// Transfer
-impl_remote!(TransferProver, REMOTE_URL, "resources/", "transfer", "prover");
-impl_remote!(TransferVerifier, REMOTE_URL, "resources/", "transfer", "verifier");
-// Join
-impl_remote!(JoinProver, REMOTE_URL, "resources/", "join", "prover");
-impl_remote!(JoinVerifier, REMOTE_URL, "resources/", "join", "verifier");
-// Split
-impl_remote!(SplitProver, REMOTE_URL, "resources/", "split", "prover");
-impl_remote!(SplitVerifier, REMOTE_URL, "resources/", "split", "verifier");
-// Fee
-impl_remote!(FeeProver, REMOTE_URL, "resources/", "fee", "prover");
-impl_remote!(FeeVerifier, REMOTE_URL, "resources/", "fee", "verifier");
+// // Mint
+// impl_remote!(MintProver, REMOTE_URL, "resources/", "mint", "prover");
+// impl_remote!(MintVerifier, REMOTE_URL, "resources/", "mint", "verifier");
+// // Transfer
+// impl_remote!(TransferProver, REMOTE_URL, "resources/", "transfer", "prover");
+// impl_remote!(TransferVerifier, REMOTE_URL, "resources/", "transfer", "verifier");
+// // Join
+// impl_remote!(JoinProver, REMOTE_URL, "resources/", "join", "prover");
+// impl_remote!(JoinVerifier, REMOTE_URL, "resources/", "join", "verifier");
+// // Split
+// impl_remote!(SplitProver, REMOTE_URL, "resources/", "split", "prover");
+// impl_remote!(SplitVerifier, REMOTE_URL, "resources/", "split", "verifier");
+// // Fee
+// impl_remote!(FeeProver, REMOTE_URL, "resources/", "fee", "prover");
+// impl_remote!(FeeVerifier, REMOTE_URL, "resources/", "fee", "verifier");
+
+use std::sync::Mutex;
+
+lazy_static! {
+    pub static ref PARAMETER_PROVIDER: Mutex<IndexMap<String, Vec<u8>>> = {
+        let mut map = IndexMap::new();
+        map.insert("TestProver".into(), Vec::<u8>::new());
+        map.insert("MintProver".into(), Vec::<u8>::new());
+        map.insert("MintVerifier".into(), Vec::<u8>::new());
+        map.insert("TransferProver".into(), Vec::<u8>::new());
+        map.insert("TransferVerifier".into(), Vec::<u8>::new());
+        map.insert("JoinProver".into(), Vec::<u8>::new());
+        map.insert("JoinVerifier".into(), Vec::<u8>::new());
+        map.insert("SplitProver".into(), Vec::<u8>::new());
+        map.insert("SplitVerifier".into(), Vec::<u8>::new());
+        map.insert("FeeProver".into(), Vec::<u8>::new());
+        map.insert("FeeVerifier".into(), Vec::<u8>::new());
+        Mutex::new(map)
+    };
+}
+
+#[macro_export]
+macro_rules! impl_web {
+    ($name: ident, $fname: tt, $ftype: tt) => {
+        pub struct $name;
+
+        impl $name {
+            pub fn load_bytes() -> Result<Vec<u8>, $crate::errors::ParameterError> {
+                let provider_lock = PARAMETER_PROVIDER.lock();
+                match provider_lock {
+                    Ok(provider) => {
+                        let bytes = provider.get(stringify!($name));
+                        assert!(bytes.is_some(), "{} should be defined in the Parameter Provider", stringify!($name));
+                        Ok(bytes.unwrap().clone())
+                    }
+                    Err(_) => {
+                        Err(crate::errors::ParameterError::RemoteFetchDisabled)
+                    }
+                }
+            }
+        }
+
+        paste::item! {
+            #[cfg(test)]
+            #[test]
+            fn [< test_ $fname _ $ftype >]() {
+                assert!($name::load_bytes().is_ok());
+            }
+        }
+    };
+}
+
+impl_web!(TestProver, "test", "prover");
+impl_web!(MintProver, "mint", "prover");
+impl_web!(MintVerifier, "mint", "verifier");
+impl_web!(TransferProver, "transfer", "prover");
+impl_web!(TransferVerifier, "transfer", "verifier");
+impl_web!(JoinProver, "join", "prover");
+impl_web!(JoinVerifier, "join", "verifier");
+impl_web!(SplitProver, "split", "prover");
+impl_web!(SplitVerifier, "split", "verifier");
+impl_web!(FeeProver,"fee", "prover");
+impl_web!(FeeVerifier, "fee", "verifier");
 
 #[macro_export]
 macro_rules! insert_credit_keys {

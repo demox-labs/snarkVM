@@ -319,6 +319,7 @@ macro_rules! impl_remote {
             }
         }
     };
+    
     ($name: ident, $remote_url: expr, $local_dir: expr, $fname: tt, $ftype: tt) => {
         pub struct $name;
 
