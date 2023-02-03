@@ -85,6 +85,15 @@ default-features = false
 [dependencies.thiserror]
 version = "1.0"
 
+[dependencies.web-sys]
+version = "0.3"
+optional = true
+features = ["console"]
+
+[dependencies.wasm-bindgen]
+version = "0.2"
+optional = true
+
 [dependencies.wasm-bindgen-futures]
 version = "0.4"
 optional = true
@@ -119,4 +128,4 @@ version = "0.8"
 default = [ "colored", "remote" ]
 no_std_out = [ ]
 remote = [ "curl" ]
-wasm = [ "reqwest", "wasm-bindgen-futures" ]
+wasm = [ "reqwest", "web-sys", "wasm-bindgen", "wasm-bindgen-futures" ]
