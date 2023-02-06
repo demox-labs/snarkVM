@@ -147,25 +147,24 @@ lazy_static! {
 #[macro_export]
 macro_rules! impl_web {
     ($name: ident, $fname: tt, $ftype: tt) => {
-        use wasm_bindgen::prelude::*;
-
         pub struct $name;
-
-        #[wasm_bindgen]
-        impl $name {
-            #[wasm_bindgen(js_namespace = console)]
-            pub fn log(s: &str);
-        }
 
         impl $name {
             pub fn load_bytes() -> Result<Vec<u8>, $crate::errors::ParameterError> {
-                $name::log(stringify!($name));
                 let provider_lock = PARAMETER_PROVIDER.lock();
                 match provider_lock {
                     Ok(provider) => {
+                        use web_sys::console;
+
+                        let formatted_string = format!("{}: Loading Bytes", stringify!($name));
+                        // println!("{}: Loading Bytes", stringify!($name));
+                        console::log_1(&formatted_string.into());
                         let bytes = provider.get(stringify!($name));
                         assert!(bytes.is_some(), "{} should be defined in the Parameter Provider", stringify!($name));
-                        Ok(bytes.unwrap().clone())
+                        let unwrapped_bytes = bytes.unwrap().clone();
+                        let formatted_string2 = format!("{}: Loaded Bytes Sucessfully", stringify!($name));
+                        console::log_1(&formatted_string2.into());
+                        Ok(unwrapped_bytes)
                     }
                     Err(_) => {
                         Err(crate::errors::ParameterError::NotFound)
@@ -244,11 +243,11 @@ macro_rules! insert_credit_keys {
     ($map:ident, $type:ident<$network:ident>, $variant:ident) => {{
         paste::paste! {
             let string = stringify!([<$variant:lower>]);
-            $crate::insert_key!($map, string, $type<$network>, ("mint", $crate::testnet3::[<Mint $variant>]::load_bytes()));
+            // $crate::insert_key!($map, string, $type<$network>, ("mint", $crate::testnet3::[<Mint $variant>]::load_bytes()));
             $crate::insert_key!($map, string, $type<$network>, ("transfer", $crate::testnet3::[<Transfer $variant>]::load_bytes()));
-            $crate::insert_key!($map, string, $type<$network>, ("join", $crate::testnet3::[<Join $variant>]::load_bytes()));
-            $crate::insert_key!($map, string, $type<$network>, ("split", $crate::testnet3::[<Split $variant>]::load_bytes()));
-            $crate::insert_key!($map, string, $type<$network>, ("fee", $crate::testnet3::[<Fee $variant>]::load_bytes()));
+            // $crate::insert_key!($map, string, $type<$network>, ("join", $crate::testnet3::[<Join $variant>]::load_bytes()));
+            // $crate::insert_key!($map, string, $type<$network>, ("split", $crate::testnet3::[<Split $variant>]::load_bytes()));
+            // $crate::insert_key!($map, string, $type<$network>, ("fee", $crate::testnet3::[<Fee $variant>]::load_bytes()));
         }
     }};
 }
@@ -257,11 +256,23 @@ macro_rules! insert_credit_keys {
 macro_rules! insert_key {
     ($map:ident, $string:tt, $type:ident<$network:ident>, ($name:tt, $circuit_key:expr)) => {{
         // Load the circuit key bytes.
+        let formatted_string = format!("{}: Loading Circuit Keys", stringify!($string));
+        web_sys::console::log_1(&formatted_string.into());
         let key_bytes: Vec<u8> = $circuit_key.expect(&format!("Failed to load {} bytes", $string));
+        let formatted_string2 = format!("{}: Loaded Circuit Keys: {} Bytes", stringify!($string), key_bytes.len());
+        web_sys::console::log_1(&formatted_string2.into());
         // Recover the circuit key.
         let key = $type::<$network>::from_bytes_le(&key_bytes[2..]).expect(&format!("Failed to recover {}", $string));
+        let formatted_string3 = format!("{}: Recovered Circuit Keys", stringify!($string));
+        web_sys::console::log_1(&formatted_string3.into());
         // Insert the circuit key.
-        $map.insert($name.to_string(), std::sync::Arc::new(key));
+        let thing = std::sync::Arc::new(key);
+        let formatted_string10 = format!("{}: ARC Made", stringify!($string));
+        web_sys::console::log_1(&formatted_string10.into());
+
+        $map.insert($name.to_string(), thing);
+        let formatted_string4 = format!("{}: Inserted Circuit Key", stringify!($string));
+        web_sys::console::log_1(&formatted_string4.into());
     }};
 }
 
