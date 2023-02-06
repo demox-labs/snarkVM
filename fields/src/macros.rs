@@ -261,6 +261,7 @@ macro_rules! impl_primefield_serializer {
                 mut reader: R,
             ) -> Result<(Self, F), snarkvm_utilities::serialize::SerializationError> {
                 use snarkvm_utilities::serialize::SerializationError;
+                use web_sys::console;
                 // All reasonable `Flags` should be less than 8 bits in size
                 // (256 values are enough for anyone!)
                 if F::BIT_SIZE > 8 {
@@ -273,6 +274,8 @@ macro_rules! impl_primefield_serializer {
 
                 let mut masked_bytes = [0; $byte_size + 1];
                 reader.read_exact(&mut masked_bytes[..output_byte_size])?;
+
+                console::log_1(&"Flags 1".into());
 
                 let flags = F::from_u8_remove_flags(&mut masked_bytes[output_byte_size - 1])
                     .ok_or(SerializationError::UnexpectedFlags)?;

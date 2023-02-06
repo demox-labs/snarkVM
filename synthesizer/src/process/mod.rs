@@ -39,7 +39,7 @@ use console::{
 use aleo_std::prelude::{finish, lap, timer};
 use indexmap::IndexMap;
 use parking_lot::RwLock;
-use std::sync::Arc;
+use std::{sync::Arc};
 
 #[cfg(test)]
 use std::collections::HashMap;
@@ -152,10 +152,17 @@ impl<N: Network> Process<N> {
     /// Initializes a new process.
     #[inline]
     pub fn load_transfer() -> Result<Self> {
+        use web_sys::console;
+
         let timer = timer!("Process::load");
 
         // Initialize the process.
-        let mut process = Self { universal_srs: Arc::new(UniversalSRS::load()?), stacks: IndexMap::new() };
+        let u_srs = UniversalSRS::load()?;
+        // let formatted_string = format!(" {:#?} : Loading Bytes", u_srs.);
+        // console::log_1(&formatted_string.into());
+
+        let mut process = Self { universal_srs: Arc::new(u_srs), stacks: IndexMap::new() };
+        // process.universal_srs().clone()..to_bytes();
         lap!(timer, "Initialize process");
 
         // Initialize the 'credits.aleo' program.
