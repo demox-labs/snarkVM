@@ -54,17 +54,17 @@ impl<E: PairingEngine, MM: MarlinMode> ToBytes for CircuitProvingKey<E, MM> {
 impl<E: PairingEngine, MM: MarlinMode> FromBytes for CircuitProvingKey<E, MM> {
     #[inline]
     fn read_le<R: Read>(mut reader: R) -> io::Result<Self> {
-        use web_sys::console;
+        //use web_sys::console;
 
-        console::log_1(&"Read Le 1".into());
+        //console::log_1(&"Read Le 1".into());
         let circuit_verifying_key = CanonicalDeserialize::deserialize_compressed(&mut reader)?;
-        console::log_1(&"Read Le 2".into());
+        //console::log_1(&"Read Le 2".into());
         let circuit_commitment_randomness = CanonicalDeserialize::deserialize_compressed(&mut reader)?;
-        console::log_1(&"Read Le 3".into());
+        //console::log_1(&"Read Le 3".into());
         let circuit = CanonicalDeserialize::deserialize_compressed(&mut reader)?;
-        console::log_1(&"Read Le 4".into());
+        //console::log_1(&"Read Le 4".into());
         let committer_key = Arc::new(FromBytes::read_le(&mut reader)?);
-        console::log_1(&"Read Le 5".into());
+        //console::log_1(&"Read Le 5".into());
 
         Ok(Self { circuit_verifying_key, circuit_commitment_randomness, circuit, committer_key })
     }

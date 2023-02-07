@@ -152,16 +152,15 @@ impl<N: Network> Process<N> {
     /// Initializes a new process.
     #[inline]
     pub fn load_transfer() -> Result<Self> {
-        use web_sys::console;
+        //use web_sys::console;
 
         let timer = timer!("Process::load");
 
         // Initialize the process.
-        let u_srs = UniversalSRS::load()?;
         // let formatted_string = format!(" {:#?} : Loading Bytes", u_srs.);
-        // console::log_1(&formatted_string.into());
+        // //console::log_1(&formatted_string.into());
 
-        let mut process = Self { universal_srs: Arc::new(u_srs), stacks: IndexMap::new() };
+        let mut process = Self { universal_srs: Arc::new( UniversalSRS::load()?), stacks: IndexMap::new() };
         // process.universal_srs().clone()..to_bytes();
         lap!(timer, "Initialize process");
 
