@@ -282,6 +282,10 @@ macro_rules! impl_primefield_serializer {
                 let flags = F::from_u8_remove_flags(&mut masked_bytes[output_byte_size - 1])
                     .ok_or(SerializationError::UnexpectedFlags)?;
 
+                let formatted_string = format!("Flags found: {:?}", flags.u8_bitmask());
+                // println!("Flags found: {}", )
+                console::log_1(&formatted_string.into());
+
                 Ok((Self::read_le(&masked_bytes[..])?, flags))
             }
         }
@@ -309,6 +313,8 @@ macro_rules! impl_primefield_serializer {
                 _validate: snarkvm_utilities::serialize::Validate,
             ) -> Result<Self, snarkvm_utilities::SerializationError> {
                 use snarkvm_utilities::serialize::EmptyFlags;
+                use web_sys::console;
+                console::log_1(&"deserialize here".into());
                 Self::deserialize_with_flags::<R, EmptyFlags>(reader).map(|(r, _)| r)
             }
         }

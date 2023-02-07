@@ -124,6 +124,8 @@ macro_rules! impl_sw_curve_serializer {
                 validate: Validate,
             ) -> Result<Self, snarkvm_utilities::serialize::SerializationError> {
                 use snarkvm_utilities::serialize::SWFlags;
+                use web_sys::console;
+                console::log_1(&"deserialize here affine".into());
                 let point = if let Compress::Yes = compress {
                     let (x, flags) = P::BaseField::deserialize_with_flags::<_, SWFlags>(&mut reader)?;
                     if flags.is_infinity() {

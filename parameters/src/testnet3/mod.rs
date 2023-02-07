@@ -154,16 +154,16 @@ macro_rules! impl_web {
                 let provider_lock = PARAMETER_PROVIDER.lock();
                 match provider_lock {
                     Ok(provider) => {
-                        //use web_sys::console;
+                        use web_sys::console;
 
                         let formatted_string = format!("{}: Loading Bytes", stringify!($name));
-                        // println!("{}: Loading Bytes", stringify!($name));
-                        //console::log_1(&formatted_string.into());
+                        println!("{}: Loading Bytes", stringify!($name));
+                        console::log_1(&formatted_string.into());
                         let bytes = provider.get(stringify!($name));
                         assert!(bytes.is_some(), "{} should be defined in the Parameter Provider", stringify!($name));
                         let unwrapped_bytes = bytes.unwrap().clone();
                         let formatted_string2 = format!("{}: Loaded Bytes Sucessfully", stringify!($name));
-                        //console::log_1(&formatted_string2.into());
+                        console::log_1(&formatted_string2.into());
                         Ok(unwrapped_bytes)
                     }
                     Err(_) => {
@@ -260,22 +260,22 @@ macro_rules! insert_key {
     ($map:ident, $string:tt, $type:ident<$network:ident>, ($name:tt, $circuit_key:expr)) => {{
         // Load the circuit key bytes.
         let formatted_string = format!("{}: Loading Circuit Keys", stringify!($string));
-        //web_sys:://console::log_1(&formatted_string.into());
+        web_sys::console::log_1(&formatted_string.into());
         let key_bytes: Vec<u8> = $circuit_key.expect(&format!("Failed to load {} bytes", $string));
         let formatted_string2 = format!("{}: Loaded Circuit Keys: {} Bytes", stringify!($string), key_bytes.len());
-        //web_sys:://console::log_1(&formatted_string2.into());
+        web_sys::console::log_1(&formatted_string2.into());
         // Recover the circuit key.
         let key = $type::<$network>::from_bytes_le(&key_bytes[2..]).expect(&format!("Failed to recover {}", $string));
         let formatted_string3 = format!("{}: Recovered Circuit Keys", stringify!($string));
-        //web_sys:://console::log_1(&formatted_string3.into());
+        web_sys::console::log_1(&formatted_string3.into());
         // Insert the circuit key.
         let thing = std::sync::Arc::new(key);
         let formatted_string10 = format!("{}: ARC Made", stringify!($string));
-        //web_sys:://console::log_1(&formatted_string10.into());
+        web_sys::console::log_1(&formatted_string10.into());
 
         $map.insert($name.to_string(), thing);
         let formatted_string4 = format!("{}: Inserted Circuit Key", stringify!($string));
-        //web_sys:://console::log_1(&formatted_string4.into());
+        web_sys::console::log_1(&formatted_string4.into());
     }};
 }
 

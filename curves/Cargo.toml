@@ -53,6 +53,10 @@ version = "1.0.152"
 default-features = false
 features = [ "derive" ]
 
+[dependencies.web-sys]
+version = "0.3"
+features = ["console"]
+
 [dependencies.thiserror]
 version = "1.0"
 

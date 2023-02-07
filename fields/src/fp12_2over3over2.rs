@@ -536,6 +536,10 @@ impl<P: Fp12Parameters> CanonicalSerialize for Fp12<P> {
 impl<P: Fp12Parameters> CanonicalDeserializeWithFlags for Fp12<P> {
     #[inline]
     fn deserialize_with_flags<R: Read, F: Flags>(mut reader: R) -> Result<(Self, F), SerializationError> {
+        use web_sys::console;
+        console::log_1(&"deserialize here fp12".into());
+        println!("deserialize here fp12");
+
         let c0 = CanonicalDeserialize::deserialize_uncompressed(&mut reader)?;
         let (c1, flags) = Fp6::deserialize_with_flags(&mut reader)?;
         Ok((Self::new(c0, c1), flags))

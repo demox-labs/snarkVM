@@ -457,6 +457,9 @@ impl<P: Fp2Parameters> CanonicalSerialize for Fp2<P> {
 impl<P: Fp2Parameters> CanonicalDeserializeWithFlags for Fp2<P> {
     #[inline]
     fn deserialize_with_flags<R: Read, F: Flags>(mut reader: R) -> Result<(Self, F), SerializationError> {
+        use web_sys::console;
+        console::log_1(&"deserialize here fp2".into());
+
         let c0: P::Fp = CanonicalDeserialize::deserialize_uncompressed(&mut reader)?;
         let (c1, flags): (P::Fp, _) = CanonicalDeserializeWithFlags::deserialize_with_flags(&mut reader)?;
         Ok((Fp2::new(c0, c1), flags))
