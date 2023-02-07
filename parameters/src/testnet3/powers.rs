@@ -156,6 +156,8 @@ impl<E: PairingEngine> CanonicalDeserialize for PowersOfG<E> {
         compress: Compress,
         validate: Validate,
     ) -> Result<Self, SerializationError> {
+        use web_sys::console;
+        console::log_1(&"deserialize here powers of g".into());
         let powers_of_beta_g = PowersOfBetaG::deserialize_with_mode(&mut reader, compress, Validate::No)?;
         let powers_of_beta_times_gamma_g =
             Arc::new(BTreeMap::deserialize_with_mode(&mut reader, compress, Validate::No)?);

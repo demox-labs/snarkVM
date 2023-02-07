@@ -84,6 +84,8 @@ impl<E: PairingEngine> Commitments<E> {
         compress: Compress,
         validate: Validate,
     ) -> Result<Self, snarkvm_utilities::SerializationError> {
+        use web_sys::console;
+        console::log_1(&"deserialize here proofs".into());
         let mut witness_commitments = Vec::new();
         for _ in 0..batch_size {
             witness_commitments.push(CanonicalDeserialize::deserialize_with_mode(&mut reader, compress, validate)?);

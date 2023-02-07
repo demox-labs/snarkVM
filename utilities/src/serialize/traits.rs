@@ -64,13 +64,13 @@ pub trait Flags: Default + Clone + Copy + Sized {
     }
 }
 
-#[derive(Copy, Clone, PartialEq, Eq)]
+#[derive(Copy, Clone, PartialEq, Eq, Debug)]
 pub enum Compress {
     Yes,
     No,
 }
 
-#[derive(Copy, Clone, PartialEq, Eq)]
+#[derive(Copy, Clone, PartialEq, Eq, Debug)]
 pub enum Validate {
     Yes,
     No,
@@ -205,7 +205,7 @@ where
     T: DeserializeOwned,
 {
     fn take_from_value<D: Deserializer<'de>>(value: &mut serde_json::Value, field: &str) -> Result<Self, D::Error> {
-        
+
         serde_json::from_value(
             value
                 .get_mut(field)

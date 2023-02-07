@@ -137,8 +137,8 @@ impl<F: PrimeField, MM: MarlinMode> CanonicalDeserialize for Circuit<F, MM> {
         compress: Compress,
         validate: Validate,
     ) -> Result<Self, SerializationError> {
-        //use web_sys::console;
-        //console::log_1(&"Deser 1".into());
+        use web_sys::console;
+        console::log_1(&"deserialize here circuit".into());
         let index_info: CircuitInfo<F> = CanonicalDeserialize::deserialize_with_mode(&mut reader, compress, validate)?;
         let constraint_domain_size = EvaluationDomain::<F>::compute_size_of_domain(index_info.num_constraints)
             .ok_or(SerializationError::InvalidData)?;
@@ -149,7 +149,7 @@ impl<F: PrimeField, MM: MarlinMode> CanonicalDeserialize for Circuit<F, MM> {
         let non_zero_c_domain_size = EvaluationDomain::<F>::compute_size_of_domain(index_info.num_non_zero_c)
             .ok_or(SerializationError::InvalidData)?;
 
-        //console::log_1(&"Deser 2".into());
+        console::log_1(&"Circuit 2".into());
 
         let (fft_precomputation, ifft_precomputation) = AHPForR1CS::<F, MM>::fft_precomputation(
             constraint_domain_size,
@@ -158,7 +158,7 @@ impl<F: PrimeField, MM: MarlinMode> CanonicalDeserialize for Circuit<F, MM> {
             non_zero_c_domain_size,
         )
         .ok_or(SerializationError::InvalidData)?;
-        //console::log_1(&"Deser 3".into());
+        console::log_1(&"Circuit 3".into());
         Ok(Circuit {
             index_info,
             a: CanonicalDeserialize::deserialize_with_mode(&mut reader, compress, validate)?,
