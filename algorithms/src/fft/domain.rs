@@ -357,17 +357,25 @@ impl<F: FftField> EvaluationDomain<F> {
 
 impl<F: FftField> EvaluationDomain<F> {
     pub fn precompute_fft(&self) -> FFTPrecomputation<F> {
-        execute_with_max_available_threads(|| FFTPrecomputation {
+        // execute_with_max_available_threads(|| FFTPrecomputation {
+        //     roots: self.roots_of_unity(self.group_gen),
+        //     domain: *self,
+        // })
+        FFTPrecomputation {
             roots: self.roots_of_unity(self.group_gen),
             domain: *self,
-        })
+        }
     }
 
     pub fn precompute_ifft(&self) -> IFFTPrecomputation<F> {
-        execute_with_max_available_threads(|| IFFTPrecomputation {
+        // execute_with_max_available_threads(|| IFFTPrecomputation {
+        //     inverse_roots: self.roots_of_unity(self.group_gen_inv),
+        //     domain: *self,
+        // })
+        IFFTPrecomputation {
             inverse_roots: self.roots_of_unity(self.group_gen_inv),
             domain: *self,
-        })
+        }
     }
 
     pub(crate) fn in_order_fft_in_place<T: DomainCoeff<F>>(&self, x_s: &mut [T]) {

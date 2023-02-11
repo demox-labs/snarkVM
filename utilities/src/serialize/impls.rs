@@ -144,11 +144,64 @@ macro_rules! impl_canonical_serialization_uint {
     };
 }
 
+macro_rules! impl_canonical_serialization_usize {
+    ($type:ty) => {
+        impl CanonicalSerialize for $type {
+            #[inline]
+            fn serialize_with_mode<W: Write>(
+                &self,
+                mut writer: W,
+                _compress: Compress,
+            ) -> Result<(), SerializationError> {
+                Ok(writer.write_all(&self.to_le_bytes())?)
+            }
+
+            #[inline]
+            fn serialized_size(&self, _compress: Compress) -> usize {
+                std::mem::size_of::<$type>()
+            }
+        }
+        impl Valid for $type {
+            #[inline]
+            fn check(&self) -> Result<(), SerializationError> {
+                Ok(())
+            }
+
+            #[inline]
+            fn batch_check<'a>(_batch: impl Iterator<Item = &'a Self>) -> Result<(), SerializationError>
+            where
+                Self: 'a,
+            {
+                Ok(())
+            }
+        }
+
+        impl CanonicalDeserialize for $type {
+            #[inline]
+            fn deserialize_with_mode<R: Read>(
+                mut reader: R,
+                _compress: Compress,
+                _validate: Validate,
+            ) -> Result<Self, SerializationError> {
+                let mut bytes = [0u8; 8];
+                reader.read_exact(&mut bytes)?;
+                let u64_value = u64::from_le_bytes(bytes);
+                if u64_value <= usize::MAX as u64 {
+                    let usize_value = u64_value as usize;
+                    return Ok(usize_value)
+                } else {
+                    return Err(SerializationError::IncompatibleTarget);
+                }
+            }
+        }
+    };
+}
+
 impl_canonical_serialization_uint!(u8);
 impl_canonical_serialization_uint!(u16);
 impl_canonical_serialization_uint!(u32);
 impl_canonical_serialization_uint!(u64);
-impl_canonical_serialization_uint!(usize);
+impl_canonical_serialization_usize!(usize);
 
 impl<T: CanonicalSerialize> CanonicalSerialize for Option<T> {
     #[inline]

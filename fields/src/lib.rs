@@ -67,7 +67,7 @@ impl_primefield_serializer!(Fp384, Fp384Parameters, 48);
 
 // Given a vector of field elements {v_i}, compute the vector {v_i^(-1)}
 pub fn batch_inversion<F: Field>(v: &mut [F]) {
-    batch_inversion_and_mul(v, &F::one());
+    serial_batch_inversion_and_mul(v, &F::one());
 }
 
 #[cfg(not(feature = "parallel"))]

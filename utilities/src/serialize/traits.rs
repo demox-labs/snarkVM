@@ -83,12 +83,12 @@ pub trait Valid: Sized + Sync {
     where
         Self: 'a,
     {
-        #[cfg(feature = "parallel")]
-        {
-            use rayon::{iter::ParallelBridge, prelude::ParallelIterator};
-            batch.par_bridge().try_for_each(|e| e.check())?;
-        }
-        #[cfg(not(feature = "parallel"))]
+        // #[cfg(feature = "parallel")]
+        // {
+        //     use rayon::{iter::ParallelBridge, prelude::ParallelIterator};
+        //     batch.par_bridge().try_for_each(|e| e.check())?;
+        // }
+        // #[cfg(not(feature = "parallel"))]
         {
             for item in batch {
                 item.check()?;
