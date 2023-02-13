@@ -32,13 +32,13 @@ impl<'a, T> ExecutionPool<'a, T> {
         Self { jobs: Vec::with_capacity(cap) }
     }
 
-    #[cfg(feature = "parallel")]
-    pub fn add_job<F: 'a + FnOnce() -> T + Send>(&mut self, f: F) {
-        self.jobs.push(Box::new(f));
-    }
+    // #[cfg(feature = "parallel")]
+    // pub fn add_job<F: 'a + FnOnce() -> T + Send>(&mut self, f: F) {
+    //     self.jobs.push(Box::new(f));
+    // }
 
-    #[cfg(not(feature = "parallel"))]
-    pub fn add_job<F: 'a + FnOnce() -> T>(&mut self, f: F) {
+    // #[cfg(not(feature = "parallel"))]
+    pub fn add_job<F: 'a + FnOnce() -> T + Send>(&mut self, f: F) {
         self.jobs.push(Box::new(f));
     }
 
@@ -46,12 +46,12 @@ impl<'a, T> ExecutionPool<'a, T> {
     where
         T: Send + Sync,
     {
-        #[cfg(feature = "parallel")]
-        {
-            use rayon::prelude::*;
-            execute_with_max_available_threads(|| self.jobs.into_par_iter().map(|f| f()).collect())
-        }
-        #[cfg(not(feature = "parallel"))]
+        // #[cfg(feature = "parallel")]
+        // {
+        //     use rayon::prelude::*;
+        //     execute_with_max_available_threads(|| self.jobs.into_par_iter().map(|f| f()).collect())
+        // }
+        // #[cfg(not(feature = "parallel"))]
         {
             self.jobs.into_iter().map(|f| f()).collect()
         }
@@ -75,14 +75,14 @@ pub fn max_available_threads() -> usize {
     }
 }
 
-#[inline(always)]
-#[cfg(feature = "parallel")]
-pub fn execute_with_max_available_threads<T: Sync + Send>(f: impl FnOnce() -> T + Send) -> T {
-    execute_with_threads(f, max_available_threads())
-}
+// #[inline(always)]
+// #[cfg(feature = "parallel")]
+// pub fn execute_with_max_available_threads<T: Sync + Send>(f: impl FnOnce() -> T + Send) -> T {
+//     execute_with_threads(f, max_available_threads())
+// }
 
+// #[cfg(not(feature = "parallel"))]
 #[inline(always)]
-#[cfg(not(feature = "parallel"))]
 pub fn execute_with_max_available_threads<T>(f: impl FnOnce() -> T + Send) -> T {
     f()
 }

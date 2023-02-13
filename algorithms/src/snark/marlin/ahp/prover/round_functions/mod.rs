@@ -27,8 +27,8 @@ use snarkvm_utilities::cfg_iter;
 #[cfg(not(feature = "std"))]
 use snarkvm_utilities::println;
 
-#[cfg(feature = "parallel")]
-use rayon::prelude::*;
+// #[cfg(feature = "parallel")]
+// use rayon::prelude::*;
 
 mod first;
 mod fourth;
@@ -43,8 +43,10 @@ impl<F: PrimeField, MM: MarlinMode> AHPForR1CS<F, MM> {
     ) -> Result<prover::State<'a, F, MM>, AHPError> {
         let init_time = start_timer!(|| "AHP::Prover::Init");
 
+        let circuit_itr = circuits.iter();
         // Perform matrix multiplications.
-        let (padded_public_variables, private_variables, z_a, z_b) = cfg_iter!(circuits)
+        // let (padded_public_variables, private_variables, z_a, z_b) = cfg_iter!(circuits)
+        let (padded_public_variables, private_variables, z_a, z_b) = circuit_itr
             .map(|circuit| {
                 let constraint_time = start_timer!(|| "Generating constraints and witnesses");
                 let mut pcs = prover::ConstraintSystem::new();
@@ -91,13 +93,13 @@ impl<F: PrimeField, MM: MarlinMode> AHPForR1CS<F, MM> {
                 Self::formatted_public_input_is_admissible(&padded_public_variables)?;
 
                 let eval_z_a_time = start_timer!(|| "Evaluating z_A");
-                let z_a = cfg_iter!(index.a)
+                let z_a = index.a.iter()
                     .map(|row| inner_product(&padded_public_variables, &private_variables, row, num_public_variables))
                     .collect();
                 end_timer!(eval_z_a_time);
 
                 let eval_z_b_time = start_timer!(|| "Evaluating z_B");
-                let z_b = cfg_iter!(index.b)
+                let z_b = index.b.iter()
                     .map(|row| inner_product(&padded_public_variables, &private_variables, row, num_public_variables))
                     .collect();
                 end_timer!(eval_z_b_time);

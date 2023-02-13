@@ -591,36 +591,36 @@ impl<F: FftField> EvaluationDomain<F> {
     /// Computes the first `self.size / 2` roots of unity for the entire domain.
     /// e.g. for the domain [1, g, g^2, ..., g^{n - 1}], it computes
     // [1, g, g^2, ..., g^{(n/2) - 1}]
-    #[cfg(not(feature = "parallel"))]
+    // #[cfg(not(feature = "parallel"))]
     pub fn roots_of_unity(&self, root: F) -> Vec<F> {
         compute_powers_serial((self.size as usize) / 2, root)
     }
 
-    /// Computes the first `self.size / 2` roots of unity.
-    #[cfg(feature = "parallel")]
-    pub fn roots_of_unity(&self, root: F) -> Vec<F> {
-        // TODO: check if this method can replace parallel compute powers.
-        let log_size = log2(self.size as usize);
-        // early exit for short inputs
-        if log_size <= LOG_ROOTS_OF_UNITY_PARALLEL_SIZE {
-            compute_powers_serial((self.size as usize) / 2, root)
-        } else {
-            let mut temp = root;
-            // w, w^2, w^4, w^8, ..., w^(2^(log_size - 1))
-            let log_powers: Vec<F> = (0..(log_size - 1))
-                .map(|_| {
-                    let old_value = temp;
-                    temp.square_in_place();
-                    old_value
-                })
-                .collect();
+    // /// Computes the first `self.size / 2` roots of unity.
+    // #[cfg(feature = "parallel")]
+    // pub fn roots_of_unity(&self, root: F) -> Vec<F> {
+    //     // TODO: check if this method can replace parallel compute powers.
+    //     let log_size = log2(self.size as usize);
+    //     // early exit for short inputs
+    //     if log_size <= LOG_ROOTS_OF_UNITY_PARALLEL_SIZE {
+    //         compute_powers_serial((self.size as usize) / 2, root)
+    //     } else {
+    //         let mut temp = root;
+    //         // w, w^2, w^4, w^8, ..., w^(2^(log_size - 1))
+    //         let log_powers: Vec<F> = (0..(log_size - 1))
+    //             .map(|_| {
+    //                 let old_value = temp;
+    //                 temp.square_in_place();
+    //                 old_value
+    //             })
+    //             .collect();
 
-            // allocate the return array and start the recursion
-            let mut powers = vec![F::zero(); 1 << (log_size - 1)];
-            Self::roots_of_unity_recursive(&mut powers, &log_powers);
-            powers
-        }
-    }
+    //         // allocate the return array and start the recursion
+    //         let mut powers = vec![F::zero(); 1 << (log_size - 1)];
+    //         Self::roots_of_unity_recursive(&mut powers, &log_powers);
+    //         powers
+    //     }
+    // }
 
     #[cfg(feature = "parallel")]
     fn roots_of_unity_recursive(out: &mut [F], log_powers: &[F]) {

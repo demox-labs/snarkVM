@@ -149,6 +149,30 @@ impl<N: Network> Process<N> {
         Ok(process)
     }
 
+    #[inline]
+    pub fn load_wasm() -> Result<Self> {
+        let timer = timer!("Process::load");
+
+        // Initialize the process.
+        let mut process = Self { universal_srs: Arc::new(UniversalSRS::load()?), stacks: IndexMap::new() };
+        lap!(timer, "Initialize process");
+
+        // Initialize the 'credits.aleo' program.
+        let program = Program::credits()?;
+        lap!(timer, "Load credits program");
+
+        // Compute the 'credits.aleo' program stack.
+        let stack = Stack::new(&process, &program)?;
+        lap!(timer, "Initialize stack");
+
+        // Add the stack to the process.
+        process.stacks.insert(*program.id(), stack);
+
+        finish!(timer, "Process::load");
+        // Return the process.
+        Ok(process)
+    }
+
     /// Initializes a new process with a cache of previously used keys. This version is suitable for tests
     /// (which often use nested loops that keep reusing those), as their deserialization is slow.
     #[cfg(test)]
@@ -250,6 +274,16 @@ impl<N: Network> Process<N> {
         proving_key: ProvingKey<N>,
     ) -> Result<()> {
         self.get_stack(program_id)?.insert_proving_key(function_name, proving_key)
+    }
+
+    #[inline]
+    pub fn insert_transfer_proving_key(
+        &self,
+        proving_key: ProvingKey<N>,
+    ) -> Result<()> {
+        let program = Program::<N>::credits().unwrap();
+        let function_name = Identifier::from_str("transfer").unwrap();
+        self.get_stack(program.id())?.insert_proving_key(&function_name, proving_key)
     }
 
     /// Inserts the given verifying key, for the given program ID and function name.

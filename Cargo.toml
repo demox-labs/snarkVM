@@ -82,7 +82,6 @@ default = [
   "console",
   "synthesizer",
   "cli",
-  "parallel",
   "parameters"
 ]
 full = [
