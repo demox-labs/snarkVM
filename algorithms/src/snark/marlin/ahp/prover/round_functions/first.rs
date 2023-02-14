@@ -171,8 +171,7 @@ impl<F: PrimeField, MM: MarlinMode> AHPForR1CS<F, MM> {
         };
 
         let w_poly_time = start_timer!(|| "Computing w polynomial");
-        // let w_poly_evals = cfg_into_iter!(0..constraint_domain.size())
-        let w_poly_evals = (0..constraint_domain.size()).into_iter()
+        let w_poly_evals = cfg_into_iter!(0..constraint_domain.size())
             .map(|k| match k % ratio {
                 0 => F::zero(),
                 _ => w_extended[k - (k / ratio) - 1] - x_evals[k],

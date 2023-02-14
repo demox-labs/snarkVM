@@ -38,6 +38,9 @@ required-features = [ "setup" ]
 default = [ ]
 parallel = [
   "rayon",
+  "circuit/parallel",
+  "console/parallel",
+  "snarkvm-algorithms/parallel",
   "snarkvm-fields/parallel",
   "snarkvm-utilities/parallel"
 ]
