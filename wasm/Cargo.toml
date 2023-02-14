@@ -52,7 +52,7 @@ default-features = false
 [dependencies.snarkvm-synthesizer]
 path = "../synthesizer"
 version = "0.9.11"
-features = ["wasm"]
+features = [ "wasm" ]
 optional = true
 default-features = false
 

@@ -35,7 +35,7 @@ harness = false
 required-features = [ "setup" ]
 
 [features]
-default = [ "parallel" ]
+default = [ ]
 parallel = [
   "rayon",
   "snarkvm-fields/parallel",
