@@ -142,6 +142,14 @@ impl<E: PairingEngine, FS: AlgebraicSponge<E::Fq, 2>, MM: MarlinMode> MarlinSNAR
         if terminator.load(Ordering::Relaxed) { Err(MarlinError::Terminated) } else { Ok(()) }
     }
 
+    fn to_le_bytes_8(n: &usize) -> [u8; 8] {
+        let mut bytes = [0u8; 8];
+        let n_bytes = n.to_le_bytes();
+        let len = std::mem::size_of::<usize>();
+        bytes[..len].copy_from_slice(&n_bytes[..len]);
+        bytes
+    }
+
     fn init_sponge(
         fs_parameters: &FS::Parameters,
         batch_size: usize,

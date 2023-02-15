@@ -140,6 +140,10 @@ version = "1.0"
 version = "0.4"
 optional = true
 
+[dependencies.web-sys]
+version = "0.3"
+features = ["console"]
+
 [dev-dependencies.expect-test]
 version = "1.4.1"
 

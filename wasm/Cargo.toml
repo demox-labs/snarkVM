@@ -26,6 +26,11 @@ edition = "2021"
 [lib]
 crate-type = [ "cdylib", "rlib" ]
 
+[dependencies.snarkvm-circuit]
+path = "../circuit"
+version = "0.10.2"
+optional = true
+
 [dependencies.snarkvm-console]
 path = "../console"
 version = "0.10.2"
@@ -76,7 +81,9 @@ version = "0.3.34"
 
 [features]
 default = [ "full" ]
-full = [ "console", "curves", "fields", "synthesizer", "utilities" ]
+full = [ "circuit", "console", "curves", "fields", "synthesizer", "utilities" ]
+serial = ["snarkvm-console/serial", "snarkvm-curves/serial", "snarkvm-fields/serial", "snarkvm-synthesizer/serial", "snarkvm-utilities/serial"]
+circuit = [ "snarkvm-circuit" ]
 console = [ "snarkvm-console" ]
 curves = [ "snarkvm-curves" ]
 fields = [ "snarkvm-fields" ]
