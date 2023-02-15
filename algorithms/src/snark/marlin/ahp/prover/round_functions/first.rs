@@ -71,13 +71,15 @@ impl<F: PrimeField, MM: MarlinMode> AHPForR1CS<F, MM> {
         let round_time = start_timer!(|| "AHP::Prover::FirstRound");
         let constraint_domain = state.constraint_domain;
         let batch_size = state.batch_size;
-
+        
         let z_a = state.z_a.take().unwrap();
         let z_b = state.z_b.take().unwrap();
         let private_variables = core::mem::take(&mut state.private_variables);
+
         assert_eq!(z_a.len(), batch_size);
         assert_eq!(z_b.len(), batch_size);
         assert_eq!(private_variables.len(), batch_size);
+
         let mut r_b_s = Vec::with_capacity(batch_size);
 
         let mut job_pool = snarkvm_utilities::ExecutionPool::with_capacity(3 * batch_size);
@@ -109,8 +111,8 @@ impl<F: PrimeField, MM: MarlinMode> AHPForR1CS<F, MM> {
         assert_eq!(batches.len(), batch_size);
 
         let mask_poly = Self::calculate_mask_poly(constraint_domain, rng);
-
         let oracles = prover::FirstOracles { batches, mask_poly };
+        
         assert!(oracles.matches_info(&Self::first_round_polynomial_info(batch_size)));
         state.first_round_oracles = Some(Arc::new(oracles));
         state.mz_poly_randomizer = MM::ZK.then_some(r_b_s);

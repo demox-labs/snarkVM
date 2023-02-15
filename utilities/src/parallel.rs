@@ -38,7 +38,7 @@ impl<'a, T> ExecutionPool<'a, T> {
     }
 
     #[cfg(not(feature = "parallel"))]
-    pub fn add_job<F: 'a + FnOnce() -> T>(&mut self, f: F) {
+    pub fn add_job<F: 'a + FnOnce() -> T + Send>(&mut self, f: F) {
         self.jobs.push(Box::new(f));
     }
 
@@ -81,8 +81,8 @@ pub fn execute_with_max_available_threads<T: Sync + Send>(f: impl FnOnce() -> T 
     execute_with_threads(f, max_available_threads())
 }
 
-#[inline(always)]
 #[cfg(not(feature = "parallel"))]
+#[inline(always)]
 pub fn execute_with_max_available_threads<T>(f: impl FnOnce() -> T + Send) -> T {
     f()
 }
@@ -174,6 +174,20 @@ macro_rules! cfg_reduce {
 
         #[cfg(not(feature = "parallel"))]
         let result = $e.fold($default(), $op);
+
+        result
+    }};
+}
+
+/// Turns a collection into an iterator.
+#[macro_export]
+macro_rules! cfg_values {
+    ($e: expr) => {{
+        #[cfg(feature = "parallel")]
+        let result = $e.par_values();
+
+        #[cfg(not(feature = "parallel"))]
+        let result = $e.values();
 
         result
     }};
