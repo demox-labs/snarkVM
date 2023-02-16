@@ -20,11 +20,13 @@ optional = true
 path = "./collections"
 version = "0.9.12"
 optional = true
+default-features = false
 
 [dependencies.snarkvm-console-network]
 path = "./network"
 version = "0.9.12"
 optional = true
+default-features = false
 
 [dependencies.snarkvm-console-program]
 path = "./program"
@@ -42,12 +44,14 @@ default = [
   "algorithms",
   "collections",
   "network",
+  "parallel",
   "program",
   "types"
 ]
 parallel = [
   "snarkvm-console-collections/parallel",
-  "snarkvm-console-program"
+  "snarkvm-console-program/parallel",
+  "snarkvm-console-network/parallel"
 ]
 wasm = [ "snarkvm-console-network/wasm" ]
 test = [ "snarkvm-console-program/test" ]

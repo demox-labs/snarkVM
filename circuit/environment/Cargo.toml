@@ -15,6 +15,7 @@ harness = false
 package = "snarkvm-console-network"
 path = "../../console/network"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-circuit-environment-witness]
 path = "./witness"
@@ -39,7 +40,6 @@ default-features = false
 [dependencies.snarkvm-utilities]
 path = "../../utilities"
 version = "0.9.12"
-default-features = false
 
 [dependencies.indexmap]
 version = "1.9.2"
@@ -71,8 +71,11 @@ path = "../../console/types"
 version = "0.4"
 
 [features]
-default = [ "snarkvm-curves/default", "snarkvm-r1cs/default" ]
+default = [ "parallel" ]
 parallel = [
   "console/parallel",
-  "snarkvm-fields/parallel"
+  "snarkvm-curves/parallel",
+  "snarkvm-fields/parallel",
+  "snarkvm-r1cs/parallel",
+  "snarkvm-utilities/parallel"
 ]

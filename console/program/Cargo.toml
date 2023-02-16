@@ -7,11 +7,12 @@ license = "GPL-3.0"
 edition = "2021"
 
 [features]
-default = [ ]
+default = [ "parallel" ]
 test = [ ]
 parallel = [
   "snarkvm-console-collections/parallel",
-  "snarkvm-console-network/parallel"
+  "snarkvm-console-network/parallel",
+  "snarkvm-utilities/parallel"
 ]
 
 [dependencies.snarkvm-console-account]
@@ -21,6 +22,7 @@ version = "0.9.12"
 [dependencies.snarkvm-console-collections]
 path = "../collections"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-console-network]
 path = "../network"
@@ -33,6 +35,7 @@ version = "0.9.12"
 [dependencies.snarkvm-utilities]
 path = "../../utilities"
 version = "0.9.12"
+default-features = false
 
 [dependencies.enum_index]
 version = "0.2"

@@ -9,31 +9,52 @@ edition = "2021"
 [dependencies.snarkvm-circuit-environment]
 path = "../environment"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-circuit-types-address]
 path = "./address"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-circuit-types-boolean]
 path = "./boolean"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-circuit-types-field]
 path = "./field"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-circuit-types-group]
 path = "./group"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-circuit-types-integers]
 path = "./integers"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-circuit-types-scalar]
 path = "./scalar"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-circuit-types-string]
 path = "./string"
 version = "0.9.12"
+default-features = false
+
+[features]
+default = [ "parallel" ]
+parallel = [
+  "snarkvm-circuit-environment/parallel",
+  "snarkvm-circuit-types-address/parallel",
+  "snarkvm-circuit-types-boolean/parallel",
+  "snarkvm-circuit-types-field/parallel",
+  "snarkvm-circuit-types-group/parallel",
+  "snarkvm-circuit-types-integers/parallel",
+  "snarkvm-circuit-types-scalar/parallel",
+  "snarkvm-circuit-types-string/parallel"
+]

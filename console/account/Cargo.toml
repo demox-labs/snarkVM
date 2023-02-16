@@ -38,6 +38,7 @@ features = [ "preserve_order" ]
 default = [
   "compute_key",
   "graph_key",
+  "parallel",
   "private_key",
   "signature",
   "view_key"

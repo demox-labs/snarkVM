@@ -9,44 +9,56 @@ edition = "2021"
 [dependencies.snarkvm-console-network-environment]
 path = "../network/environment"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-console-types-address]
 path = "./address"
 version = "0.9.12"
 optional = true
+default-features = false
 
 [dependencies.snarkvm-console-types-boolean]
 path = "./boolean"
 version = "0.9.12"
 optional = true
+default-features = false
 
 [dependencies.snarkvm-console-types-field]
 path = "./field"
 version = "0.9.12"
 optional = true
+default-features = false
 
 [dependencies.snarkvm-console-types-group]
 path = "./group"
 version = "0.9.12"
 optional = true
+default-features = false
 
 [dependencies.snarkvm-console-types-integers]
 path = "./integers"
 version = "0.9.12"
 optional = true
+default-features = false
 
 [dependencies.snarkvm-console-types-scalar]
 path = "./scalar"
 version = "0.9.12"
 optional = true
+default-features = false
 
 [dependencies.snarkvm-console-types-string]
 path = "./string"
 version = "0.9.12"
 optional = true
+default-features = false
 
 [features]
 default = [
+  "parallel",
+  "types"
+]
+types = [
   "address",
   "boolean",
   "field",
@@ -54,6 +66,16 @@ default = [
   "integers",
   "scalar",
   "string"
+]
+parallel = [
+  "snarkvm-console-network-environment/parallel",
+  "snarkvm-console-types-address/parallel",
+  "snarkvm-console-types-boolean/parallel",
+  "snarkvm-console-types-field/parallel",
+  "snarkvm-console-types-group/parallel",
+  "snarkvm-console-types-integers/parallel",
+  "snarkvm-console-types-scalar/parallel",
+  "snarkvm-console-types-string/parallel"
 ]
 address = [
   "snarkvm-console-types-address",

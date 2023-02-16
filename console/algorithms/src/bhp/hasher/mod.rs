@@ -18,7 +18,7 @@ mod hash_uncompressed;
 
 use crate::Blake2Xs;
 use snarkvm_console_types::prelude::*;
-use snarkvm_utilities::BigInteger;
+use snarkvm_utilities::{BigInteger};
 
 use std::sync::Arc;
 
@@ -81,7 +81,7 @@ impl<E: Environment, const NUM_WINDOWS: u8, const WINDOW_SIZE: u8> BHPHasher<E, 
         }
 
         // Compute the bases lookup.
-        let bases_lookup = cfg_iter!(bases)
+        let bases_lookup = bases.iter()
             .map(|x| {
                 x.iter()
                     .map(|g| {

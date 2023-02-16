@@ -120,7 +120,8 @@ version = "0.4.3"
 version = "0.8"
 
 [features]
-default = [ "colored", "remote" ]
+default = [ "colored", "remote", "parallel" ]
 no_std_out = [ ]
+parallel = [ "colored", "remote", "snarkvm-curves/parallel", "snarkvm-utilities/parallel" ]
 remote = [ "curl" ]
 wasm = [ "reqwest", "wasm-bindgen-futures" ]

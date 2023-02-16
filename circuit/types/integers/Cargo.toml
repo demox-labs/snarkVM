@@ -10,27 +10,36 @@ edition = "2021"
 package = "snarkvm-console-types-integers"
 path = "../../../console/types/integers"
 version = "0.9.12"
-optional = true
+default-features = false
 
 [dependencies.snarkvm-circuit-environment]
 path = "../../environment"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-circuit-types-boolean]
 path = "../boolean"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-circuit-types-field]
 path = "../field"
 version = "0.9.12"
+default-features = false
 
 [dev-dependencies.snarkvm-utilities]
 path = "../../../utilities"
 default-features = false
+features = [ "parallel" ]
 
 [dev-dependencies.paste]
 version = "1"
 
 [features]
-default = [ "enable_console" ]
-enable_console = [ "console" ]
+default = [ "parallel" ]
+parallel = [
+  "console/parallel",
+  "snarkvm-circuit-environment/parallel",
+  "snarkvm-circuit-types-boolean/parallel",
+  "snarkvm-circuit-types-field/parallel"
+]

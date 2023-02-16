@@ -43,5 +43,9 @@ default-features = false
 version = "1.0"
 
 [features]
-default = [ ]
-parallel = [ "snarkvm-fields/parallel" ]
+default = [ "parallel" ]
+parallel = [
+  "snarkvm-fields/parallel",
+  "snarkvm-curves/parallel",
+  "snarkvm-utilities/parallel"
+]

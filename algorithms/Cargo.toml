@@ -162,6 +162,7 @@ version = "1.0"
 [features]
 default = [
   "full",
+  "parallel",
   "snarkvm-curves/default",
   "snarkvm-fields/default",
   "snarkvm-r1cs/default",
@@ -180,6 +181,7 @@ cuda = [ "snarkvm-algorithms-cuda" ]
 parallel = [
   "rayon",
   "snarkvm-fields/parallel",
+  "snarkvm-parameters/parallel",
   "snarkvm-utilities/parallel"
 ]
 profiler = [ "aleo-std/profiler" ]

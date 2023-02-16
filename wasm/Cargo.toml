@@ -29,11 +29,13 @@ crate-type = [ "cdylib", "rlib" ]
 [dependencies.snarkvm-circuit]
 path = "../circuit"
 version = "0.9.11"
+default-features = false
 optional = true
 
 [dependencies.snarkvm-console]
 path = "../console"
 version = "0.9.12"
+default-features = false
 features = [ "wasm" ]
 optional = true
 
@@ -52,9 +54,9 @@ default-features = false
 [dependencies.snarkvm-synthesizer]
 path = "../synthesizer"
 version = "0.9.11"
+default-features = false
 features = [ "wasm" ]
 optional = true
-default-features = false
 
 [dependencies.snarkvm-utilities]
 path = "../utilities"

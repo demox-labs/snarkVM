@@ -10,28 +10,40 @@ edition = "2021"
 package = "snarkvm-console-types-address"
 path = "../../../console/types/address"
 version = "0.9.12"
-optional = true
+default-features = false
 
 [dependencies.snarkvm-circuit-environment]
 path = "../../environment"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-circuit-types-boolean]
 path = "../boolean"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-circuit-types-field]
 path = "../field"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-circuit-types-group]
 path = "../group"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-circuit-types-scalar]
 path = "../scalar"
 version = "0.9.12"
+default-features = false
 
 [features]
-default = [ "enable_console" ]
-enable_console = [ "console" ]
+default = [ "parallel" ]
+parallel = [
+  "console/parallel",
+  "snarkvm-circuit-environment/parallel",
+  "snarkvm-circuit-types-boolean/parallel",
+  "snarkvm-circuit-types-field/parallel",
+  "snarkvm-circuit-types-group/parallel",
+  "snarkvm-circuit-types-scalar/parallel"
+]

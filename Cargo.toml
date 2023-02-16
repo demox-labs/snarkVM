@@ -113,6 +113,7 @@ parallel = [
   "snarkvm-algorithms/parallel",
   "snarkvm-circuit/parallel",
   "snarkvm-console/parallel",
+  "snarkvm-curves/parallel",
   "snarkvm-fields/parallel",
   "snarkvm-synthesizer/parallel",
   "snarkvm-utilities/parallel"
@@ -175,6 +176,7 @@ optional = true
 path = "./utilities"
 version = "0.9.12"
 optional = true
+default-features = false
 
 [dependencies.snarkvm-wasm]
 path = "./wasm"

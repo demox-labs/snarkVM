@@ -7,14 +7,21 @@ license = "GPL-3.0"
 edition = "2021"
 
 [features]
-default = [ "snarkvm-algorithms/polycommit_full" ]
+default = [ "parallel", "snarkvm-algorithms/polycommit_full" ]
 wasm = [
   "snarkvm-algorithms/polycommit_wasm",
   "snarkvm-parameters/wasm"
 ]
 parallel = [
+  "snarkvm-algorithms/polycommit_full",
+  "snarkvm-algorithms/parallel",
+  "snarkvm-console-algorithms/parallel",
   "snarkvm-console-collections/parallel",
-  "snarkvm-fields/parallel"
+  "snarkvm-console-network-environment/parallel",
+  "snarkvm-curves/parallel",
+  "snarkvm-fields/parallel",
+  "snarkvm-parameters/parallel",
+  "snarkvm-utilities/parallel"
 ]
 
 [dependencies.snarkvm-algorithms]
@@ -26,14 +33,17 @@ features = [ "snark" ]
 [dependencies.snarkvm-console-algorithms]
 path = "../algorithms"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-console-collections]
 path = "../collections"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-console-network-environment]
 path = "./environment"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-console-types]
 path = "../types"
@@ -54,10 +64,12 @@ default-features = false
 [dependencies.snarkvm-parameters]
 path = "../../parameters"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-utilities]
 path = "../../utilities"
 version = "0.9.12"
+default-features = false
 
 [dependencies.anyhow]
 version = "1.0.69"

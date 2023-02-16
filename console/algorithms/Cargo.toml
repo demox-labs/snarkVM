@@ -25,6 +25,8 @@ default-features = false
 [dependencies.snarkvm-utilities]
 path = "../../utilities"
 version = "0.9.12"
+default-features = false
+features = [ "std", "derive" ]
 
 [dependencies.blake2s_simd]
 version = "1.0"
@@ -34,9 +36,14 @@ version = "1.10"
 default-features = false
 features = [ "const_generics", "const_new" ]
 
+[dependencies.rayon]
+version = "1"
+optional = true
+
 [dev-dependencies.snarkvm-curves]
 path = "../../curves"
 default-features = false
+features = [ "parallel" ]
 
 [dev-dependencies.criterion]
 version = "0.4.0"
@@ -55,5 +62,10 @@ version = "1.0"
 features = [ "preserve_order" ]
 
 [features]
-default = [ ]
-parallel = [ "snarkvm-fields/parallel" ]
+default = [ "parallel" ]
+parallel = [
+  "rayon",
+  "snarkvm-console-types/parallel",
+  "snarkvm-fields/parallel",
+  "snarkvm-utilities/parallel"
+]

@@ -35,12 +35,13 @@ harness = false
 required-features = [ "setup" ]
 
 [features]
-default = [ ]
+default = [ "parallel" ]
 parallel = [
   "rayon",
   "circuit/parallel",
   "console/parallel",
   "snarkvm-algorithms/parallel",
+  "snarkvm-curves/parallel",
   "snarkvm-fields/parallel",
   "snarkvm-utilities/parallel"
 ]
@@ -54,23 +55,28 @@ wasm = [ ]
 package = "snarkvm-circuit"
 path = "../circuit"
 version = "0.9.12"
+default-features = false
 
 [dependencies.console]
 package = "snarkvm-console"
 path = "../console"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-algorithms]
 path = "../algorithms"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-curves]
 path = "../curves"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-fields]
 path = "../fields"
 version = "0.9.12"
+default-features = false
 
 [dependencies.snarkvm-utilities]
 path = "../utilities"
