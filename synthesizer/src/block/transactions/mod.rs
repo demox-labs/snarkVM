@@ -33,7 +33,7 @@ use snarkvm_utilities::cfg_values;
 
 use indexmap::IndexMap;
 
-#[cfg(feature = "parallel")]
+#[cfg(not(feature = "serial"))]
 use rayon::prelude::*;
 
 #[derive(Clone, PartialEq, Eq)]
@@ -83,39 +83,39 @@ impl<N: Network> Transactions<N> {
 impl<N: Network> Transactions<N> {
     /// Returns the transaction with the given transition ID, if it exists.
     pub fn find_transaction_for_transition_id(&self, transition_id: &N::TransitionID) -> Option<&Transaction<N>> {
-        cfg_values!(self).find(|tx| tx.contains_transition(transition_id))
+        cfg_values!(self).find_any(|tx| tx.contains_transition(transition_id))
     }
 
     /// Returns the transaction with the given serial number, if it exists.
     pub fn find_transaction_for_serial_number(&self, serial_number: &Field<N>) -> Option<&Transaction<N>> {
-        cfg_values!(self).find(|tx| tx.contains_serial_number(serial_number))
+        cfg_values!(self).find_any(|tx| tx.contains_serial_number(serial_number))
     }
     
     /// Returns the transaction with the given commitment, if it exists.
     pub fn find_transaction_for_commitment(&self, commitment: &Field<N>) -> Option<&Transaction<N>> {
-        cfg_values!(self).find(|tx| tx.contains_commitment(commitment))
+        cfg_values!(self).find_any(|tx| tx.contains_commitment(commitment))
     }
 
     /// Returns the transition with the corresponding transition ID, if it exists.
     pub fn find_transition(&self, transition_id: &N::TransitionID) -> Option<&Transition<N>> {
-        cfg_values!(self).filter_map(|tx| tx.find_transition(transition_id)).find(|_| true)
+        cfg_values!(self).filter_map(|tx| tx.find_transition(transition_id)).find_any(|_| true)
     }
 
     /// Returns the transition for the given serial number, if it exists.
     pub fn find_transition_for_serial_number(&self, serial_number: &Field<N>) -> Option<&Transition<N>> {
         cfg_values!(self)
             .filter_map(|tx| tx.find_transition_for_serial_number(serial_number))
-            .find(|_| true)
+            .find_any(|_| true)
     }
 
     /// Returns the transition for the given commitment, if it exists.
     pub fn find_transition_for_commitment(&self, commitment: &Field<N>) -> Option<&Transition<N>> {
-        cfg_values!(self).filter_map(|tx| tx.find_transition_for_commitment(commitment)).find(|_| true)
+        cfg_values!(self).filter_map(|tx| tx.find_transition_for_commitment(commitment)).find_any(|_| true)
     }
 
     /// Returns the record with the corresponding commitment, if it exists.
     pub fn find_record(&self, commitment: &Field<N>) -> Option<&Record<N, Ciphertext<N>>> {
-        cfg_values!(self).filter_map(|tx| tx.find_record(commitment)).find(|_| true)
+        cfg_values!(self).filter_map(|tx| tx.find_record(commitment)).find_any(|_| true)
     }
 }
 

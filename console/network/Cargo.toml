@@ -12,10 +12,6 @@ wasm = [
   "snarkvm-algorithms/polycommit_wasm",
   "snarkvm-parameters/wasm"
 ]
-parallel = [
-  "snarkvm-console-collections/parallel",
-  "snarkvm-fields/parallel"
-]
 
 [dependencies.snarkvm-algorithms]
 path = "../../algorithms"
@@ -49,7 +45,6 @@ default-features = false
 [dependencies.snarkvm-fields]
 path = "../../fields"
 version = "0.9.12"
-default-features = false
 
 [dependencies.snarkvm-parameters]
 path = "../../parameters"

@@ -9,10 +9,6 @@ edition = "2021"
 [features]
 default = [ ]
 test = [ ]
-parallel = [
-  "snarkvm-console-collections/parallel",
-  "snarkvm-console-network/parallel"
-]
 
 [dependencies.snarkvm-console-account]
 path = "../account"

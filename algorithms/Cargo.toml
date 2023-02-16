@@ -46,12 +46,10 @@ harness = false
 [dependencies.snarkvm-curves]
 path = "../curves"
 version = "0.9.12"
-default-features = false
 
 [dependencies.snarkvm-fields]
 path = "../fields"
 version = "0.9.12"
-default-features = false
 
 [dependencies.snarkvm-parameters]
 path = "../parameters"
@@ -62,7 +60,6 @@ default-features = false
 [dependencies.snarkvm-r1cs]
 path = "../r1cs"
 version = "0.9.12"
-default-features = false
 
 [dependencies.snarkvm-utilities]
 path = "../utilities"
@@ -116,7 +113,6 @@ default-features = false
 
 [dependencies.rayon]
 version = "1"
-optional = true
 
 [dependencies.rust-gpu-tools]
 version = "0.6.0"
@@ -160,13 +156,7 @@ features = [ "preserve_order" ]
 version = "1.0"
 
 [features]
-default = [
-  "full",
-  "snarkvm-curves/default",
-  "snarkvm-fields/default",
-  "snarkvm-r1cs/default",
-  "snarkvm-utilities/default"
-]
+default = [ "full" ]
 full = [ "crypto_hash", "fft", "msm", "polycommit_full", "snark" ]
 wasm = [
   "crypto_hash",
@@ -177,11 +167,6 @@ wasm = [
   "wasm-bindgen-futures"
 ]
 cuda = [ "snarkvm-algorithms-cuda" ]
-parallel = [
-  "rayon",
-  "snarkvm-fields/parallel",
-  "snarkvm-utilities/parallel"
-]
 profiler = [ "aleo-std/profiler" ]
 crypto_hash = [ ]
 fft = [ ]
