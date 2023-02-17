@@ -55,6 +55,14 @@ features = [ "getrandom", "std_rng" ]
 version = "1"
 optional = true
 
+[dependencies.wasm-bindgen]
+version = "0.2"
+optional = true
+
+[dependencies.wasm-bindgen-rayon]
+version = "1.0"
+optional = true
+
 [dependencies.serde]
 version = "1.0"
 default-features = false
@@ -70,7 +78,14 @@ version = "0.3"
 default-features = false
 
 [features]
-default = [ "std", "derive" ]
+default = [ "std", "derive", "wasm" ]
 std = [ ]
 derive = [ "snarkvm-utilities-derives" ]
+wasm = [ "rayon", "wasm-bindgen", "wasm-bindgen-rayon" ]
 parallel = [ "rayon", "num_cpus", "aleo-std/cpu" ]
+
+[target.wasm32-unknown-unknown]
+rustflags = ["-C", "target-feature=+atomics,+bulk-memory,+mutable-globals"]
+
+[unstable]
+build-std = ["panic_abort", "std"]
