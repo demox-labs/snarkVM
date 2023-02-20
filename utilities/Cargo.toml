@@ -78,14 +78,8 @@ version = "0.3"
 default-features = false
 
 [features]
-default = [ "std", "derive", "wasm" ]
+default = [ "std", "derive" ]
 std = [ ]
 derive = [ "snarkvm-utilities-derives" ]
-wasm = [ "rayon", "wasm-bindgen", "wasm-bindgen-rayon" ]
+# wasm = [ "rayon", "wasm-bindgen", "wasm-bindgen-rayon" ]
 parallel = [ "rayon", "num_cpus", "aleo-std/cpu" ]
-
-[target.wasm32-unknown-unknown]
-rustflags = ["-C", "target-feature=+atomics,+bulk-memory,+mutable-globals"]
-
-[unstable]
-build-std = ["panic_abort", "std"]
