@@ -115,8 +115,11 @@ version = "0.3"
 default-features = false
 
 [dependencies.rayon]
-version = "1"
-optional = true
+version = "1.5"
+
+[dependencies.web-sys]
+version = "0.3"
+features = ["console"]
 
 [dependencies.rust-gpu-tools]
 version = "0.6.0"
@@ -178,7 +181,6 @@ wasm = [
 ]
 cuda = [ "snarkvm-algorithms-cuda" ]
 parallel = [
-  "rayon",
   "snarkvm-fields/parallel",
   "snarkvm-utilities/parallel"
 ]

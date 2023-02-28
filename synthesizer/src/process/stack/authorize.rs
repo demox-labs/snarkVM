@@ -26,6 +26,8 @@ impl<N: Network> Stack<N> {
         inputs: impl ExactSizeIterator<Item = impl TryInto<Value<N>>>,
         rng: &mut R,
     ) -> Result<Authorization<N>> {
+        use web_sys::console;
+        console::log_1(&"auth 1".into());
         let timer = timer!("Stack::authorize");
 
         // Ensure the program contains functions.
@@ -33,10 +35,12 @@ impl<N: Network> Stack<N> {
 
         // Prepare the function name.
         let function_name = function_name.try_into().map_err(|_| anyhow!("Invalid function name"))?;
+        console::log_1(&"auth 2".into());
         // Retrieve the function.
         let function = self.get_function(&function_name)?;
         // Retrieve the input types.
         let input_types = function.input_types();
+        console::log_1(&"auth 3".into());
         // Ensure the number of inputs matches the number of input types.
         if function.inputs().len() != input_types.len() {
             bail!(
@@ -47,18 +51,23 @@ impl<N: Network> Stack<N> {
             )
         }
         lap!(timer, "Verify the number of inputs");
+        console::log_1(&"auth 4".into());
 
         // Compute the request.
         let request = Request::sign(private_key, *self.program.id(), function_name, inputs, &input_types, rng)?;
         lap!(timer, "Compute the request");
         // Initialize the authorization.
+        console::log_1(&"auth 43".into());
         let authorization = Authorization::new(&[request.clone()]);
         // Construct the call stack.
+        console::log_1(&"auth 5".into());
         let call_stack = CallStack::Authorize(vec![request], *private_key, authorization.clone());
         // Construct the authorization from the function.
+        console::log_1(&"auth 6".into());
         let _response = self.execute_function::<A, R>(call_stack, rng)?;
         lap!(timer, "Construct the authorization from the function");
 
+        console::log_1(&"auth 7".into());
         finish!(timer);
 
         // Return the authorization.

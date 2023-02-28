@@ -128,6 +128,10 @@ features = [ "preserve_order" ]
 [dependencies.tracing]
 version = "0.1"
 
+[dependencies.web-sys]
+version = "0.3"
+features = ["console"]
+
 [dev-dependencies.console]
 package = "snarkvm-console"
 path = "../console"

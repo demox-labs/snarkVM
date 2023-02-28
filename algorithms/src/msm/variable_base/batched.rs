@@ -18,7 +18,7 @@ use snarkvm_curves::{AffineCurve, ProjectiveCurve};
 use snarkvm_fields::{Field, One, PrimeField, Zero};
 use snarkvm_utilities::{cfg_into_iter, BigInteger, BitIteratorBE};
 
-#[cfg(feature = "parallel")]
+// #[cfg(feature = "parallel")]
 use rayon::prelude::*;
 
 #[cfg(target_arch = "x86_64")]
@@ -397,9 +397,12 @@ pub fn msm<G: AffineCurve>(bases: &[G], scalars: &[<G::ScalarField as PrimeField
         // Each window is of size `c`.
         // We divide up the bits 0..num_bits into windows of size `c`, and
         // in parallel process each such window.
+        use web_sys::console;
+        console::log_1(&"Before par iter".into());
+        let stuff = 0..num_bits;
         let window_sums: Vec<_> =
-            cfg_into_iter!(0..num_bits).step_by(c).map(|w_start| batched_window(bases, scalars, w_start, c)).collect();
-
+            stuff.into_par_iter().step_by(c).map(|w_start| batched_window(bases, scalars, w_start, c)).collect();
+        console::log_1(&"After par iter".into());
         // We store the sum for the lowest window.
         let (lowest, window_sums) = window_sums.split_first().unwrap();
 

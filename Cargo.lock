@@ -1981,6 +1981,7 @@ dependencies = [
  "snarkvm-utilities",
  "thiserror",
  "wasm-bindgen-futures",
+ "web-sys",
 ]
 
 [[package]]
@@ -2489,6 +2490,7 @@ dependencies = [
  "snarkvm-fields",
  "snarkvm-utilities",
  "tracing",
+ "web-sys",
 ]
 
 [[package]]

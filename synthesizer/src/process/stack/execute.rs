@@ -107,12 +107,15 @@ impl<N: Network> Stack<N> {
         rng: &mut R,
     ) -> Result<Response<N>> {
         let timer = timer!("Stack::execute_function");
+        use web_sys::console;
+        console::log_1(&"execute 1".into());
 
         // Ensure the call stack is not `Evaluate`.
         ensure!(!matches!(call_stack, CallStack::Evaluate(..)), "Illegal operation: cannot evaluate in execute mode");
 
         // Ensure the circuit environment is clean.
         A::reset();
+        console::log_1(&"execute 2".into());
 
         // Retrieve the next request.
         let console_request = call_stack.pop()?;
@@ -125,6 +128,7 @@ impl<N: Network> Stack<N> {
             console_request.network_id()
         );
 
+        console::log_1(&"execute 3".into());
         // Retrieve the function from the program.
         let function = self.get_function(console_request.function_name())?;
         // Retrieve the number of inputs.
@@ -133,12 +137,13 @@ impl<N: Network> Stack<N> {
         if num_inputs != console_request.inputs().len() {
             bail!("Expected {num_inputs} inputs, found {}", console_request.inputs().len())
         }
+        console::log_1(&"execute 4".into());
         // Retrieve the input types.
         let input_types = function.input_types();
         // Retrieve the output types.
         let output_types = function.output_types();
         lap!(timer, "Retrieve the input and output types");
-
+        console::log_1(&"execute 5".into());
         // Ensure the inputs match their expected types.
         console_request.inputs().iter().zip_eq(&input_types).try_for_each(|(input, input_type)| {
             // Ensure the input matches the input type in the function.
@@ -149,7 +154,7 @@ impl<N: Network> Stack<N> {
         // Ensure the request is well-formed.
         ensure!(console_request.verify(&input_types), "Request is invalid");
         lap!(timer, "Verify the request");
-
+        console::log_1(&"execute 6".into());
         // Initialize the registers.
         let mut registers = Registers::new(call_stack, self.get_register_types(function.name())?.clone());
 
@@ -161,7 +166,7 @@ impl<N: Network> Stack<N> {
         let request = circuit::Request::new(circuit::Mode::Private, console_request.clone());
         // Ensure the request has a valid signature, inputs, and transition view key.
         A::assert(request.verify(&input_types, &tpk));
-
+        console::log_1(&"execute 6".into());
         // Set the transition caller.
         registers.set_caller(*console_request.caller());
         // Set the transition caller, as a circuit.
@@ -176,13 +181,13 @@ impl<N: Network> Stack<N> {
 
         #[cfg(debug_assertions)]
         Self::log_circuit::<A, _>("Request");
-
+        console::log_1(&"execute 7".into());
         // Retrieve the number of constraints for verifying the request in the circuit.
         let num_request_constraints = A::num_constraints();
 
         // Retrieve the number of public variables in the circuit.
         let num_public = A::num_public();
-
+        console::log_1(&"execute 8".into());
         // Store the inputs.
         function.inputs().iter().map(|i| i.register()).zip_eq(request.inputs()).try_for_each(|(register, input)| {
             // If the circuit is in execute mode, then store the console input.
@@ -197,7 +202,7 @@ impl<N: Network> Stack<N> {
 
         // Initialize a tracker to determine if there are any function calls.
         let mut contains_function_call = false;
-
+        console::log_1(&"execute 8".into());
         // Execute the instructions.
         for instruction in function.instructions() {
             // If the circuit is in execute mode, then evaluate the instructions.
@@ -220,7 +225,7 @@ impl<N: Network> Stack<N> {
             }
         }
         lap!(timer, "Execute the instructions");
-
+        console::log_1(&"execute 9".into());
         // Load the outputs.
         let output_registers = &function.outputs().iter().map(|output| output.register().clone()).collect::<Vec<_>>();
         let outputs = output_registers
@@ -231,7 +236,7 @@ impl<N: Network> Stack<N> {
 
         #[cfg(debug_assertions)]
         Self::log_circuit::<A, _>(format!("Function '{}()'", function.name()));
-
+        console::log_1(&"execute 10".into());
         // Retrieve the number of constraints for executing the function in the circuit.
         let num_function_constraints = A::num_constraints().saturating_sub(num_request_constraints);
 
@@ -240,7 +245,7 @@ impl<N: Network> Stack<N> {
             // Ensure the number of public variables remains the same.
             ensure!(A::num_public() == num_public, "Instructions in function injected public variables");
         }
-
+        console::log_1(&"execute 11".into());
         // Construct the response.
         let response = circuit::Response::from_outputs(
             request.network_id(),
@@ -257,7 +262,7 @@ impl<N: Network> Stack<N> {
 
         #[cfg(debug_assertions)]
         Self::log_circuit::<A, _>("Response");
-
+        console::log_1(&"execute 12".into());
         // Retrieve the number of constraints for verifying the response in the circuit.
         let num_response_constraints =
             A::num_constraints().saturating_sub(num_request_constraints).saturating_sub(num_function_constraints);
@@ -334,6 +339,7 @@ impl<N: Network> Stack<N> {
         } else {
             None
         };
+        console::log_1(&"execute 13".into());
 
         use circuit::{ToField, Zero};
 
@@ -356,6 +362,7 @@ impl<N: Network> Stack<N> {
                 _ => continue,
             }
         }
+        console::log_1(&"execute 14".into());
 
         // Ensure the i64 gates matches the field gates.
         A::assert_eq(i64_gates.to_field(), &field_gates);
@@ -376,6 +383,7 @@ impl<N: Network> Stack<N> {
                 _ => continue,
             }
         }
+        console::log_1(&"execute 15".into());
 
         // If the program and function is not a coinbase function, then ensure the i64 gates is positive.
         if !Program::is_coinbase(self.program.id(), function.name()) {
@@ -409,7 +417,7 @@ impl<N: Network> Stack<N> {
         let fee = i64_gates.eject_value();
         // Eject the response.
         let response = response.eject_value();
-
+        console::log_1(&"execute 16".into());
         // Ensure the outputs matches the expected value types.
         response.outputs().iter().zip_eq(&output_types).try_for_each(|(output, output_type)| {
             // Ensure the output matches its expected type.
@@ -427,6 +435,7 @@ impl<N: Network> Stack<N> {
                 A::num_constraints()
             );
         }
+        console::log_1(&"execute 17".into());
 
         // Eject the circuit assignment and reset the circuit.
         let assignment = A::eject_assignment_and_reset();
@@ -442,6 +451,7 @@ impl<N: Network> Stack<N> {
                 lap!(timer, "Synthesize the {} circuit key", function.name());
             }
         }
+        console::log_1(&"execute 18".into());
 
         // If the circuit is in `CheckDeployment` mode, then save the assignment.
         if let CallStack::CheckDeployment(_, _, ref assignments) = registers.call_stack() {
@@ -483,7 +493,7 @@ impl<N: Network> Stack<N> {
         }
 
         finish!(timer);
-
+        console::log_1(&"execute 19".into());
         // Return the response.
         Ok(response)
     }

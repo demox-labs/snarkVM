@@ -28,6 +28,10 @@ impl<N: Network> Process<N> {
         rng: &mut R,
     ) -> Result<Authorization<N>> {
         // Authorize the call.
-        self.get_stack(program_id)?.authorize::<A, R>(private_key, function_name, inputs, rng)
+        use web_sys::console;
+        console::log_1(&"Before auth".into());
+        let thing = self.get_stack(program_id)?.authorize::<A, R>(private_key, function_name, inputs, rng);
+        console::log_1(&"After auth".into());
+        thing
     }
 }
