@@ -90,8 +90,9 @@ pub fn execute_with_max_available_threads<T>(f: impl FnOnce() -> T + Send) -> T 
 #[cfg(feature = "parallel")]
 #[inline(always)]
 fn execute_with_threads<T: Sync + Send>(f: impl FnOnce() -> T + Send, num_threads: usize) -> T {
-    let pool = rayon::ThreadPoolBuilder::new().num_threads(num_threads).build().unwrap();
-    pool.install(f)
+    // let pool = rayon::ThreadPoolBuilder::new().num_threads(num_threads).build().unwrap();
+    // pool.install(f)
+    f()
 }
 
 /// Creates parallel iterator over refs if `parallel` feature is enabled.
