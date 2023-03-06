@@ -302,6 +302,8 @@ impl<P: Parameters> ToBytes for Affine<P> {
 impl<P: Parameters> FromBytes for Affine<P> {
     #[inline]
     fn read_le<R: Read>(mut reader: R) -> IoResult<Self> {
+        use web_sys::console;
+        console::log_1(&"deserialize here affine 2".into());
         let x = P::BaseField::read_le(&mut reader)?;
         let y = P::BaseField::read_le(&mut reader)?;
         let infinity = bool::read_le(&mut reader)?;

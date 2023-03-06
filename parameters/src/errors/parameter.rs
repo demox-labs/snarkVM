@@ -30,6 +30,9 @@ pub enum ParameterError {
     #[error("Remote fetch is disabled, enable compiler flag for feature")]
     RemoteFetchDisabled,
 
+    #[error("Necessary File Not Found")]
+    NotFound,
+
     #[error("Expected size of {}, found size of {}", _0, _1)]
     SizeMismatch(usize, usize),
 }

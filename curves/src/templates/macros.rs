@@ -61,6 +61,8 @@ macro_rules! impl_sw_curve_serializer {
                 compress: Compress,
                 validate: Validate,
             ) -> Result<Self, snarkvm_utilities::serialize::SerializationError> {
+                use web_sys::console;
+                console::log_1(&"deserialize here projective 2".into());
                 Affine::<P>::deserialize_with_mode(reader, compress, validate).map(Into::into)
             }
         }
@@ -124,6 +126,10 @@ macro_rules! impl_sw_curve_serializer {
                 validate: Validate,
             ) -> Result<Self, snarkvm_utilities::serialize::SerializationError> {
                 use snarkvm_utilities::serialize::SWFlags;
+                use web_sys::console;
+                console::log_1(&"deserialize here affine".into());
+                // let formatted_string = format!("{:?} , {:?}", compress, validate);
+                // console::log_1(&formatted_string.into());
                 let point = if let Compress::Yes = compress {
                     let (x, flags) = P::BaseField::deserialize_with_flags::<_, SWFlags>(&mut reader)?;
                     if flags.is_infinity() {
@@ -183,6 +189,8 @@ macro_rules! impl_edwards_curve_serializer {
                 compress: Compress,
                 validate: Validate,
             ) -> Result<Self, snarkvm_utilities::serialize::SerializationError> {
+                use web_sys::console;
+                console::log_1(&"deserialize here projective".into());
                 Affine::<P>::deserialize_with_mode(reader, compress, validate).map(Into::into)
             }
         }
@@ -241,6 +249,8 @@ macro_rules! impl_edwards_curve_serializer {
                 validate: Validate,
             ) -> Result<Self, snarkvm_utilities::serialize::SerializationError> {
                 use snarkvm_utilities::serialize::{EdwardsFlags, SerializationError};
+                use web_sys::console;
+                console::log_1(&"deserialize here affine canonical".into());
                 let point = if let Compress::Yes = compress {
                     let (x, flags): (P::BaseField, EdwardsFlags) = P::BaseField::deserialize_with_flags(&mut reader)?;
 

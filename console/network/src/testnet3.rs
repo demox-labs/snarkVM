@@ -140,7 +140,7 @@ impl Network for Testnet3 {
 
     /// Returns the genesis block bytes.
     fn genesis_bytes() -> &'static [u8] {
-        snarkvm_parameters::testnet3::GenesisBytes::load_bytes()
+        &[1u8, 2u8, 3u8, 4u8, 5u8]
     }
 
     /// Returns the proving key for the given function name in `credits.aleo`.

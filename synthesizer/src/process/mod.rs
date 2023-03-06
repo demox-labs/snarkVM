@@ -39,7 +39,7 @@ use console::{
 use aleo_std::prelude::{finish, lap, timer};
 use indexmap::IndexMap;
 use parking_lot::RwLock;
-use std::sync::Arc;
+use std::{sync::Arc};
 
 #[cfg(test)]
 use std::collections::HashMap;
@@ -130,6 +130,61 @@ impl<N: Network> Process<N> {
             let verifying_key = N::get_credits_verifying_key(function_name.to_string())?;
             stack.insert_verifying_key(function_name, VerifyingKey::new(verifying_key.clone()))?;
             lap!(timer, "Load verifying key for {function_name}");
+        }
+        lap!(timer, "Load circuit keys");
+
+        // Initialize the inclusion proving key.
+        let _ = N::inclusion_proving_key();
+        lap!(timer, "Load inclusion proving key");
+
+        // Initialize the inclusion verifying key.
+        let _ = N::inclusion_verifying_key();
+        lap!(timer, "Load inclusion verifying key");
+
+        // Add the stack to the process.
+        process.stacks.insert(*program.id(), stack);
+
+        finish!(timer, "Process::load");
+        // Return the process.
+        Ok(process)
+    }
+
+    /// Initializes a new process.
+    #[inline]
+    pub fn load_transfer() -> Result<Self> {
+        //use web_sys::console;
+
+        let timer = timer!("Process::load");
+
+        // Initialize the process.
+        // let formatted_string = format!(" {:#?} : Loading Bytes", u_srs.);
+        // //console::log_1(&formatted_string.into());
+
+        let mut process = Self { universal_srs: Arc::new( UniversalSRS::load()?), stacks: IndexMap::new() };
+        // process.universal_srs().clone()..to_bytes();
+        lap!(timer, "Initialize process");
+
+        // Initialize the 'credits.aleo' program.
+        let program = Program::credits()?;
+        lap!(timer, "Load credits program");
+
+        // Compute the 'credits.aleo' program stack.
+        let stack = Stack::new(&process, &program)?;
+        lap!(timer, "Initialize stack");
+
+        // Synthesize the 'credits.aleo' circuit keys.
+        for function_name in program.functions().keys() {
+            if function_name.to_string() == "transfer" {
+                // Load the proving key.
+                let proving_key = N::get_credits_proving_key(function_name.to_string())?;
+                stack.insert_proving_key(function_name, ProvingKey::new(proving_key.clone()))?;
+                lap!(timer, "Load proving key for {function_name}");
+
+                // Load the verifying key.
+                let verifying_key = N::get_credits_verifying_key(function_name.to_string())?;
+                stack.insert_verifying_key(function_name, VerifyingKey::new(verifying_key.clone()))?;
+                lap!(timer, "Load verifying key for {function_name}");
+            }
         }
         lap!(timer, "Load circuit keys");
 

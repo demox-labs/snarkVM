@@ -143,6 +143,11 @@ version = "1.0"
 version = "0.4"
 optional = true
 
+[dependencies.web-sys]
+version = "0.3"
+optional = true
+features = ["console"]
+
 [dev-dependencies.expect-test]
 version = "1.1.0"
 
@@ -168,14 +173,15 @@ default = [
   "snarkvm-r1cs/default",
   "snarkvm-utilities/default"
 ]
-full = [ "crypto_hash", "fft", "msm", "polycommit_full", "snark" ]
+full = [ "crypto_hash", "fft", "msm", "polycommit_full", "snark", "web-sys" ]
 wasm = [
   "crypto_hash",
   "fft",
   "msm",
   "polycommit_wasm",
   "snark",
-  "wasm-bindgen-futures"
+  "wasm-bindgen-futures",
+  "web-sys"
 ]
 cuda = [ "snarkvm-algorithms-cuda" ]
 parallel = [

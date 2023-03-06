@@ -144,6 +144,8 @@ impl<P: Parameters> ToBytes for Projective<P> {
 impl<P: Parameters> FromBytes for Projective<P> {
     #[inline]
     fn read_le<R: Read>(mut reader: R) -> IoResult<Self> {
+        use web_sys::console;
+        console::log_1(&"deserialize here projective stuff".into());
         let x = P::BaseField::read_le(&mut reader)?;
         let y = P::BaseField::read_le(&mut reader)?;
         let z = P::BaseField::read_le(reader)?;

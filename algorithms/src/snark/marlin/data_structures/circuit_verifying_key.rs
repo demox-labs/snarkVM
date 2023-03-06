@@ -155,6 +155,8 @@ impl<E: PairingEngine, MM: MarlinMode> ToMinimalBits for CircuitVerifyingKey<E, 
 
 impl<E: PairingEngine, MM: MarlinMode> FromBytes for CircuitVerifyingKey<E, MM> {
     fn read_le<R: Read>(r: R) -> io::Result<Self> {
+        use web_sys::console;
+        console::log_1(&"Deserialize CVK".into());
         Self::deserialize_compressed(r).map_err(|_| error("could not deserialize CircuitVerifyingKey"))
     }
 }
@@ -174,6 +176,8 @@ impl<E: PairingEngine, MM: MarlinMode> CircuitVerifyingKey<E, MM> {
 
 impl<E: PairingEngine, MM: MarlinMode> ToConstraintField<E::Fq> for CircuitVerifyingKey<E, MM> {
     fn to_field_elements(&self) -> Result<Vec<E::Fq>, ConstraintFieldError> {
+        use web_sys::console;
+        console::log_1(&"CVK to field elements".into());
         let constraint_domain_size =
             EvaluationDomain::<E::Fr>::compute_size_of_domain(self.circuit_info.num_constraints).unwrap() as u128;
         let non_zero_a_domain_size =
@@ -182,6 +186,10 @@ impl<E: PairingEngine, MM: MarlinMode> ToConstraintField<E::Fq> for CircuitVerif
             EvaluationDomain::<E::Fr>::compute_size_of_domain(self.circuit_info.num_non_zero_b).unwrap() as u128;
         let non_zero_c_domain_size =
             EvaluationDomain::<E::Fr>::compute_size_of_domain(self.circuit_info.num_non_zero_c).unwrap() as u128;
+
+        let formatted_string = format!("Domain sizes: {} , {}, {}, {}", constraint_domain_size, non_zero_a_domain_size, non_zero_b_domain_size, non_zero_c_domain_size);
+        console::log_1(&formatted_string.into());
+
 
         let mut res = Vec::new();
         res.append(&mut E::Fq::from(constraint_domain_size).to_field_elements()?);
@@ -228,6 +236,8 @@ impl<E: PairingEngine, MM: MarlinMode> Serialize for CircuitVerifyingKey<E, MM> 
 impl<'de, E: PairingEngine, MM: MarlinMode> Deserialize<'de> for CircuitVerifyingKey<E, MM> {
     #[inline]
     fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        use web_sys::console;
+        console::log_1(&"Deserialize cvk 1".into());
         match deserializer.is_human_readable() {
             true => {
                 let s: String = Deserialize::deserialize(deserializer)?;
