@@ -72,5 +72,6 @@ default-features = false
 [features]
 default = [ "std", "derive" ]
 std = [ ]
+web = [ ]
 derive = [ "snarkvm-utilities-derives" ]
 parallel = [ "rayon", "num_cpus", "aleo-std/cpu" ]

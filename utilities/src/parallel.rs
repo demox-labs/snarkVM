@@ -76,23 +76,22 @@ pub fn max_available_threads() -> usize {
 }
 
 #[inline(always)]
-#[cfg(feature = "parallel")]
+#[cfg(all(feature = "parallel", not(feature = "web")))]
 pub fn execute_with_max_available_threads<T: Sync + Send>(f: impl FnOnce() -> T + Send) -> T {
     execute_with_threads(f, max_available_threads())
 }
 
-#[cfg(not(feature = "parallel"))]
+#[cfg(any(not(feature = "parallel"), feature = "web"))]
 #[inline(always)]
 pub fn execute_with_max_available_threads<T>(f: impl FnOnce() -> T + Send) -> T {
     f()
 }
 
-#[cfg(feature = "parallel")]
+#[cfg(all(feature = "parallel", not(feature = "web")))]
 #[inline(always)]
 fn execute_with_threads<T: Sync + Send>(f: impl FnOnce() -> T + Send, num_threads: usize) -> T {
-    // let pool = rayon::ThreadPoolBuilder::new().num_threads(num_threads).build().unwrap();
-    // pool.install(f)
-    f()
+    let pool = rayon::ThreadPoolBuilder::new().num_threads(num_threads).build().unwrap();
+    pool.install(f)
 }
 
 /// Creates parallel iterator over refs if `parallel` feature is enabled.
