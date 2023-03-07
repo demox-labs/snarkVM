@@ -44,6 +44,9 @@ parallel = [
   "snarkvm-fields/parallel",
   "snarkvm-utilities/parallel"
 ]
+web = [
+  "snarkvm-utilities/web"
+]
 aleo-cli = [ ]
 cuda = [ "snarkvm-algorithms/cuda" ]
 setup = [ ]
