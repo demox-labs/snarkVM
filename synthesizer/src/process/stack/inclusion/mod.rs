@@ -370,12 +370,30 @@ impl<N: Network> Inclusion<N> {
         proving_key: ProvingKey<N>,
         execution: Execution<N>,
         assignments: &[InclusionAssignment<N>],
+        global_state_root: N::StateRoot,
         rng: &mut R,
     ) -> Result<Execution<N>>  {
-        // Compute the inclusion batch proof.
-        let (global_state_root, inclusion_proof) = Self::prove_batch::<A, R>(&proving_key, assignments, rng)?;
-        // Return the execution.
-        Execution::from(execution.into_transitions(), global_state_root, Some(inclusion_proof))
+        match assignments.is_empty() {
+            true => {
+                // Ensure the global state root is not zero.
+                if *global_state_root == Field::zero() {
+                    bail!("Inclusion expected the global state root in the execution to *not* be zero")
+                }
+
+                // Ensure the inclusion proof in the execution is 'None'.
+                if execution.inclusion_proof().is_some() {
+                    bail!("Inclusion expected the inclusion proof in the execution to be 'None'")
+                }
+                // Return the execution.
+                Execution::from(execution.into_transitions(), global_state_root, None)
+            }
+            false => {
+                // Compute the inclusion batch proof.
+                let (global_state_root, inclusion_proof) = Self::prove_batch::<A, R>(&proving_key, assignments, rng)?;
+                // Return the execution.
+                Execution::from(execution.into_transitions(), global_state_root, Some(inclusion_proof))
+            }
+        }
     }
 
     /// Returns a new execution with an inclusion proof, for the given execution.
