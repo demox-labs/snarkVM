@@ -297,6 +297,105 @@ impl<N: Network> Inclusion<N> {
         Ok((assignments, global_state_root))
     }
 
+    /// Returns the inclusion assignments for the given execution.
+    pub fn prepare_execution_stateless(
+        &self,
+        execution: &Execution<N>,
+        global_state_root: N::StateRoot,
+        commitment_to_state_path: HashMap<String, StatePath<N>>
+    ) -> Result<(Vec<InclusionAssignment<N>>, N::StateRoot)> {
+        // Ensure the number of leaves is within the Merkle tree size.
+        Transaction::check_execution_size(execution)?;
+
+        // Ensure the inclusion proof in the execution is 'None'.
+        if execution.inclusion_proof().is_some() {
+            bail!("Inclusion proof in the execution should not be set in 'Inclusion::prepare_execution'")
+        }
+
+        // Initialize an empty transaction tree.
+        let mut transaction_tree = N::merkle_tree_bhp::<TRANSACTION_DEPTH>(&[])?;
+        // Initialize a vector for the assignments.
+        let mut assignments = vec![];
+
+        // Ensure the global state root is not zero.
+        if *global_state_root == Field::zero() {
+            bail!("Inclusion expected the global state root in the execution to *not* be zero")
+        }
+
+        for (transition_index, transition) in execution.transitions().enumerate() {
+            // Construct the transaction leaf.
+            let transaction_leaf = TransactionLeaf::new_execution(transition_index as u16, **transition.id());
+
+            // Process the input tasks.
+            match self.input_tasks.get(transition.id()) {
+                Some(tasks) => {
+                    for task in tasks {
+                        // Retrieve the local state root.
+                        let local_state_root = (*transaction_tree.root()).into();
+
+                        // Construct the state path.
+                        let state_path = commitment_to_state_path.get(&task.commitment.to_string()).unwrap();
+
+                        // Ensure the global state root is the same across iterations.
+                        if global_state_root != state_path.global_state_root() {
+                            bail!("Inclusion expected the global state root to be the same across iterations")
+                        }
+
+                        // Construct the assignment for the state path.
+                        let assignment = InclusionAssignment::new(
+                            state_path.clone(),
+                            task.commitment,
+                            task.gamma,
+                            task.serial_number,
+                            local_state_root,
+                            !task.is_local,
+                        );
+
+                        // Add the assignment to the assignments.
+                        assignments.push(assignment);
+                    }
+                }
+                None => bail!("Missing input tasks for transition {} in inclusion", transition.id()),
+            }
+
+            // Insert the leaf into the transaction tree.
+            transaction_tree.append(&[transaction_leaf.to_bits_le()])?;
+        }
+
+        Ok((assignments, global_state_root))
+    }
+
+    pub fn prove_execution_stateless<A: circuit::Aleo<Network = N>, R: Rng + CryptoRng>(
+        &self,
+        proving_key: ProvingKey<N>,
+        execution: Execution<N>,
+        assignments: &[InclusionAssignment<N>],
+        global_state_root: N::StateRoot,
+        rng: &mut R,
+    ) -> Result<Execution<N>>  {
+        match assignments.is_empty() {
+            true => {
+                // Ensure the global state root is not zero.
+                if *global_state_root == Field::zero() {
+                    bail!("Inclusion expected the global state root in the execution to *not* be zero")
+                }
+
+                // Ensure the inclusion proof in the execution is 'None'.
+                if execution.inclusion_proof().is_some() {
+                    bail!("Inclusion expected the inclusion proof in the execution to be 'None'")
+                }
+                // Return the execution.
+                Execution::from(execution.into_transitions(), global_state_root, None)
+            }
+            false => {
+                // Compute the inclusion batch proof.
+                let (global_state_root, inclusion_proof) = Self::prove_batch::<A, R>(&proving_key, assignments, rng)?;
+                // Return the execution.
+                Execution::from(execution.into_transitions(), global_state_root, Some(inclusion_proof))
+            }
+        }
+    }
+
     /// Returns a new execution with an inclusion proof, for the given execution.
     pub fn prove_execution<A: circuit::Aleo<Network = N>, R: Rng + CryptoRng>(
         &self,
@@ -486,6 +585,73 @@ impl<N: Network> Inclusion<N> {
 
             // Fetch the inclusion verifying key.
             let verifying_key = VerifyingKey::<N>::new(N::inclusion_verifying_key().clone());
+            // Verify the inclusion proof.
+            ensure!(
+                verifying_key.verify_batch(N::INCLUSION_FUNCTION_NAME, &batch_verifier_inputs, inclusion_proof),
+                "Inclusion proof is invalid"
+            );
+        }
+
+        Ok(())
+    }
+
+    /// Checks the inclusion proof for the execution.
+    /// Note: This does *not* check that the global state root exists in the ledger.
+    pub fn verify_execution_stateless(execution: &Execution<N>, verifying_key: VerifyingKey<N>) -> Result<()> {
+        // Retrieve the global state root.
+        let global_state_root = execution.global_state_root();
+
+        // Retrieve the inclusion proof.
+        let inclusion_proof = execution.inclusion_proof();
+
+        // Initialize an empty transaction tree.
+        let mut transaction_tree = N::merkle_tree_bhp::<TRANSACTION_DEPTH>(&[])?;
+        // Initialize a vector for the batch verifier inputs.
+        let mut batch_verifier_inputs = vec![];
+
+        // Construct the batch verifier inputs.
+        for (transition_index, transition) in execution.transitions().enumerate() {
+            // Retrieve the local state root.
+            let local_state_root = *transaction_tree.root();
+
+            // Iterate through the inputs.
+            for input in transition.inputs() {
+                // Filter the inputs for records.
+                if let Input::Record(serial_number, _) = input {
+                    // Add the public inputs to the batch verifier inputs.
+                    batch_verifier_inputs.push(vec![
+                        N::Field::one(),
+                        **global_state_root,
+                        *local_state_root,
+                        **serial_number,
+                    ]);
+                }
+            }
+
+            // Construct the transaction leaf.
+            let transaction_leaf = TransactionLeaf::new_execution(transition_index as u16, **transition.id());
+            // Insert the leaf into the transaction tree.
+            transaction_tree.append(&[transaction_leaf.to_bits_le()])?;
+        }
+
+        // If there are no batch verifier inputs, then ensure the inclusion proof is 'None'.
+        if batch_verifier_inputs.is_empty() && inclusion_proof.is_some() {
+            bail!("No input records in the execution. Expected the inclusion proof to be 'None'")
+        }
+        // If there are batch verifier inputs, then ensure the inclusion proof is 'Some'.
+        if !batch_verifier_inputs.is_empty() && inclusion_proof.is_none() {
+            bail!("Missing inclusion proof for the execution")
+        }
+
+        // Verify the inclusion proof.
+        if let Some(inclusion_proof) = inclusion_proof {
+            // Ensure the global state root is not zero.
+            if *global_state_root == Field::zero() {
+                bail!("Inclusion expected the global state root in the execution to *not* be zero")
+            }
+
+            // Fetch the inclusion verifying key.
+            // let verifying_key = VerifyingKey::<N>::new(N::inclusion_verifying_key().clone());
             // Verify the inclusion proof.
             ensure!(
                 verifying_key.verify_batch(N::INCLUSION_FUNCTION_NAME, &batch_verifier_inputs, inclusion_proof),

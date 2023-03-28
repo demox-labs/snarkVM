@@ -2024,6 +2024,7 @@ dependencies = [
  "snarkvm-utilities",
  "thiserror",
  "wasm-bindgen-futures",
+ "web-sys",
 ]
 
 [[package]]
@@ -2516,6 +2517,7 @@ dependencies = [
  "colored",
  "criterion",
  "indexmap",
+ "itertools",
  "once_cell",
  "parking_lot",
  "paste",
@@ -2567,6 +2569,7 @@ dependencies = [
  "getrandom",
  "rand",
  "serde",
+ "snarkvm-circuit",
  "snarkvm-console",
  "snarkvm-curves",
  "snarkvm-fields",
