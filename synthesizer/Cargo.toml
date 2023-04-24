@@ -41,6 +41,9 @@ harness = false
 
 [features]
 default = [ ]
+web = [
+  "snarkvm-utilities/web"
+]
 aleo-cli = [ ]
 cuda = [ "snarkvm-algorithms/cuda" ]
 serial = [
@@ -102,14 +105,14 @@ version = "2"
 version = "1.9"
 features = [ "serde", "rayon" ]
 
-[dependencies.itertools]
-version = "0.10.1"
-
 [dependencies.once_cell]
 version = "1.17"
 
 [dependencies.parking_lot]
 version = "0.12"
+
+[dependencies.itertools]
+version = "0.10.3"
 
 [dependencies.paste]
 version = "1.0.12"

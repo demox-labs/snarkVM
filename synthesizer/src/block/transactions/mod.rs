@@ -90,7 +90,7 @@ impl<N: Network> Transactions<N> {
     pub fn find_transaction_for_serial_number(&self, serial_number: &Field<N>) -> Option<&Transaction<N>> {
         cfg_find!(self, serial_number, contains_serial_number)
     }
-
+    
     /// Returns the transaction with the given commitment, if it exists.
     pub fn find_transaction_for_commitment(&self, commitment: &Field<N>) -> Option<&Transaction<N>> {
         cfg_find!(self, commitment, contains_commitment)
