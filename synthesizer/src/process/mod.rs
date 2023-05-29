@@ -177,6 +177,13 @@ impl<N: Network> Process<N> {
         Ok(process)
     }
 
+    #[inline]
+    #[cfg(feature = "wasm")]
+    pub fn load_inclusion_proving_key() -> ProvingKey<N> {
+        return ProvingKey::<N>::new(N::inclusion_proving_key().clone());
+    }
+
+
     /// Initializes a new process with a cache of previously used keys. This version is suitable for tests
     /// (which often use nested loops that keep reusing those), as their deserialization is slow.
     #[cfg(test)]

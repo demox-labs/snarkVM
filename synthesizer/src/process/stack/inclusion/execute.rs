@@ -164,6 +164,41 @@ impl<N: Network> Inclusion<N> {
         }
     }
 
+    pub fn prove_execution_web<A: circuit::Aleo<Network = N>, R: Rng + CryptoRng>(
+        &self,
+        execution: Execution<N>,
+        assignments: &[InclusionAssignment<N>],
+        global_state_root: N::StateRoot,
+        rng: &mut R,
+        inclusion_proving_key: Option<ProvingKey<N>>,
+    ) -> Result<Execution<N>> {
+        match assignments.is_empty() {
+            true => {
+                // Ensure the global state root is not zero.
+                if *global_state_root == Field::zero() {
+                    bail!("Inclusion expected the global state root in the execution to *not* be zero")
+                }
+
+                // Ensure the inclusion proof in the execution is 'None'.
+                if execution.inclusion_proof().is_some() {
+                    bail!("Inclusion expected the inclusion proof in the execution to be 'None'")
+                }
+                // Return the execution.
+                Execution::from(execution.into_transitions(), global_state_root, None)
+            }
+            false => {
+                // Fetch the inclusion proving key.
+                let proving_key = inclusion_proving_key
+                    .unwrap_or_else(|| ProvingKey::<N>::new(N::inclusion_proving_key().clone()));
+
+                // Compute the inclusion batch proof.
+                let (global_state_root, inclusion_proof) = Self::prove_batch::<A, R>(&proving_key, assignments, rng)?;
+                // Return the execution.
+                Execution::from(execution.into_transitions(), global_state_root, Some(inclusion_proof))
+            }
+        }
+    }
+
     /// Checks the inclusion proof for the execution.
     /// Note: This does *not* check that the global state root exists in the ledger.
     pub fn verify_execution(execution: &Execution<N>) -> Result<()> {
