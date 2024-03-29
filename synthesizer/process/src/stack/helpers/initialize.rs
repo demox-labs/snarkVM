@@ -51,12 +51,14 @@ impl<N: Network> Stack<N> {
         }
         // Add the program closures to the stack.
         for closure in program.closures().values() {
+            // println!("closure: {:?}", closure);
             // Add the closure to the stack.
             stack.insert_closure(closure)?;
         }
 
         // Add the program functions to the stack.
         for function in program.functions().values() {
+            // println!("function: {:?}", function);
             // Add the function to the stack.
             stack.insert_function(function)?;
             // Determine the number of calls for the function.
