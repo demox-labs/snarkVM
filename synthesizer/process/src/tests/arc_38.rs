@@ -30,6 +30,7 @@ pub fn arc_38_program() -> &'static str {
       microcredits as u64;
       claim_block as u32;
   
+  
   // copied from credits.aleo, as structs are not importable
   struct bond_state:
       // The address of the validator.
@@ -616,8 +617,9 @@ pub fn arc_38_program() -> &'static str {
       sub r52 r1 into r73;
       set r73 into total_shares[0u8];
   // Update delegator_shares mapping
-      sub r10 r1 into r74;
-      set r74 into delegator_shares[r3];
+      get delegator_shares[r3] into r74;
+      sub r74 r1 into r75;
+      set r75 into delegator_shares[r3];
   
   
   function get_new_batch_height_test:
