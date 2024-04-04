@@ -125,6 +125,8 @@ impl Database for RocksDB {
                     options.increase_parallelism(2);
                     options.set_max_background_jobs(4);
                     options.create_if_missing(true);
+                    options.enable_statistics();
+                    options.set_stats_persist_period_sec(60);
 
                     Arc::new(rocksdb::DB::open(&options, primary)?)
                 };
