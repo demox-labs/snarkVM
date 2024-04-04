@@ -127,6 +127,7 @@ impl Database for RocksDB {
                     options.create_if_missing(true);
                     options.enable_statistics();
                     options.set_stats_persist_period_sec(60);
+                    options.set_db_log_dir("~/rocksdb_logs".to_string());
 
                     Arc::new(rocksdb::DB::open(&options, primary)?)
                 };
