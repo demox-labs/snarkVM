@@ -23,6 +23,21 @@ impl<N: Network> Record<N, Ciphertext<N>> {
         self.is_owner_with_address_x_coordinate(view_key, &address.to_x_coordinate())
     }
 
+    pub fn is_owner_direct(
+        address_x_coordinate: Field<N>,
+        view_key_scalar: Scalar<N>,
+        record_nonce: Group<N>,
+        record_owner_x_coordinate: Field<N>
+    ) -> bool {
+        let record_view_key = (record_nonce * view_key_scalar).to_x_coordinate();
+        // Compute the 0th randomizer.
+        let randomizer = N::hash_many_psd8(&[N::encryption_domain(), record_view_key], 1);
+        // Decrypt the owner.
+        let owner_x = record_owner_x_coordinate - &randomizer[0];
+        // Check if the address is the owner.
+        owner_x == address_x_coordinate
+    }
+
     /// Decrypts `self` into plaintext using the x-coordinate of the address corresponding to the given view key.
     pub fn is_owner_with_address_x_coordinate(&self, view_key: &ViewKey<N>, address_x_coordinate: &Field<N>) -> bool {
         // In debug mode, check that the address corresponds to the given view key.
