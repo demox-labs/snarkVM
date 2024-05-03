@@ -1,0 +1,20 @@
+diff --git a/console/network/src/mainnet_v0.rs b/console/network/src/mainnet_v0.rs
+index fa9825b55..cb6643d3b 100644
+--- a/console/network/src/mainnet_v0.rs
++++ b/console/network/src/mainnet_v0.rs
+@@ -138,7 +138,7 @@ impl Network for MainnetV0 {
+     /// The function name for the inclusion circuit.
+     const INCLUSION_FUNCTION_NAME: &'static str = snarkvm_parameters::mainnet::NETWORK_INCLUSION_FUNCTION_NAME;
+     /// The maximum number of certificates in a batch.
+-    const MAX_CERTIFICATES: u16 = 10;
++    const MAX_CERTIFICATES: u16 = 60;
+     /// The network name.
+     const NAME: &'static str = "Aleo Mainnet (v0)";
+ 
+diff --git a/rust-toolchain b/rust-toolchain
+index 32a6ce3c7..369f9966f 100644
+--- a/rust-toolchain
++++ b/rust-toolchain
+@@ -1 +1 @@
+-1.76.0
++1.77.2
