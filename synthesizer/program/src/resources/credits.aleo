@@ -340,6 +340,7 @@ finalize unbond_public:
     add block.height 360u32 into r5;
 
     // Determine if the signer is a validator.
+    // Potential danger -- if a signer is a validator, then calling unbond through a program managing another validator will cause the signer to unbond.
     contains committee[r0] into r6;
 
     // If the signer is a validator, jump to the `unbond_validator` logic.
