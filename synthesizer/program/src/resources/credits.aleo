@@ -333,18 +333,18 @@ finalize unbond_public:
     // Construct the initial unbond state.
     cast 0u64 0u32 into r3 as unbond_state;
     // Get the unbond state for the caller, or default to the initial unbond state.
-    get.or_use unbonding[r0] r3 into r4;
+    get.or_use unbonding[r1] r3 into r4;
 
     // Compute the height at which the unbonding will be complete, starting from the current block.
     // Note: Calling unbond across multiple blocks before the unbonding is complete will reset the height each time.
     add block.height 360u32 into r5;
 
-    // Determine if the caller is a validator or delegator.
+    // Determine if the signer is a validator.
     contains committee[r0] into r6;
 
-    // If the caller is a validator, jump to the `unbond_validator` logic.
+    // If the signer is a validator, jump to the `unbond_validator` logic.
     branch.eq r6 true to unbond_validator;
-    // If the caller is not a validator, jump to the `unbond_delegator` logic.
+    // If the signer is not a validator, jump to the `unbond_delegator` logic.
     branch.eq r6 false to unbond_delegator;
 
     /******* Unbond Validator *******/
@@ -452,7 +452,7 @@ finalize unbond_public:
     position unbond_delegator;
 
     // Get the bond state for the caller, or fail if it does not exist.
-    get bonded[r0] into r20;
+    get bonded[r1] into r20;
     // Decrement the microcredits in the bond state.
     sub r20.microcredits r2 into r21;
 
@@ -647,14 +647,14 @@ finalize claim_unbond_public:
     // Input the staker's address.
     input r0 as address.public;
 
-    // Get the unbond state for the caller, or fail if it does not exist.
+    // Get the unbond state for the staker, or fail if it does not exist.
     get unbonding[r0] into r1;
     // Determine if unbonding is complete.
     gte block.height r1.height into r2;
     // Enforce the unbonding is complete.
     assert.eq r2 true;
 
-    // Get the withdrawal address for the caller.
+    // Get the withdrawal address for the staker.
     get withdraw[r0] into r3;
 
     // Add the unbonded amount to the withdrawal address public balance.
@@ -665,15 +665,15 @@ finalize claim_unbond_public:
     add r1.microcredits r4 into r5;
     set r5 into account[r3];
 
-    // Remove the unbond state for the caller.
+    // Remove the unbond state for the staker.
     remove unbonding[r0];
 
-    // Check if the caller is still bonded.
+    // Check if the staker is still bonded.
     contains bonded[r0] into r6;
     // Ends the `claim_unbond_public` logic.
     branch.eq r6 true to end;
 
-    // If the caller is no longer bonded, remove the withdrawal address.
+    // If the staker is no longer bonded, remove the withdrawal address.
     remove withdraw[r0];
 
     // The terminus.
