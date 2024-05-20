@@ -19,16 +19,17 @@ pub mod powers;
 pub use powers::*;
 
 const REMOTE_URL: &str = "https://s3-us-west-1.amazonaws.com/mainnet.parameters";
+const DEMOX_REMOTE_URL: &str = "https://aleo-public.s3.us-west-2.amazonaws.com/testnetbeta";
 
 // Degrees
 #[cfg(not(feature = "wasm"))]
 impl_local!(Degree15, "resources/", "powers-of-beta-15", "usrs");
 #[cfg(feature = "wasm")]
-impl_remote!(Degree15, REMOTE_URL, "resources/", "powers-of-beta-15", "usrs");
+impl_remote!(Degree15, DEMOX_REMOTE_URL, "resources/", "powers-of-beta-15", "usrs");
 #[cfg(not(feature = "wasm"))]
 impl_local!(Degree16, "resources/", "powers-of-beta-16", "usrs");
 #[cfg(feature = "wasm")]
-impl_remote!(Degree16, REMOTE_URL, "resources/", "powers-of-beta-16", "usrs");
+impl_remote!(Degree16, DEMOX_REMOTE_URL, "resources/", "powers-of-beta-16", "usrs");
 impl_remote!(Degree17, REMOTE_URL, "resources/", "powers-of-beta-17", "usrs");
 impl_remote!(Degree18, REMOTE_URL, "resources/", "powers-of-beta-18", "usrs");
 impl_remote!(Degree19, REMOTE_URL, "resources/", "powers-of-beta-19", "usrs");
@@ -46,11 +47,11 @@ impl_remote!(Degree28, REMOTE_URL, "resources/", "powers-of-beta-28", "usrs");
 #[cfg(not(feature = "wasm"))]
 impl_local!(ShiftedDegree15, "resources/", "shifted-powers-of-beta-15", "usrs");
 #[cfg(feature = "wasm")]
-impl_remote!(ShiftedDegree15, REMOTE_URL, "resources/", "shifted-powers-of-beta-15", "usrs");
+impl_remote!(ShiftedDegree15, DEMOX_REMOTE_URL, "resources/", "shifted-powers-of-beta-15", "usrs");
 #[cfg(not(feature = "wasm"))]
 impl_local!(ShiftedDegree16, "resources/", "shifted-powers-of-beta-16", "usrs");
 #[cfg(feature = "wasm")]
-impl_remote!(ShiftedDegree16, REMOTE_URL, "resources/", "shifted-powers-of-beta-16", "usrs");
+impl_remote!(ShiftedDegree16, DEMOX_REMOTE_URL, "resources/", "shifted-powers-of-beta-16", "usrs");
 impl_remote!(ShiftedDegree17, REMOTE_URL, "resources/", "shifted-powers-of-beta-17", "usrs");
 impl_remote!(ShiftedDegree18, REMOTE_URL, "resources/", "shifted-powers-of-beta-18", "usrs");
 impl_remote!(ShiftedDegree19, REMOTE_URL, "resources/", "shifted-powers-of-beta-19", "usrs");
