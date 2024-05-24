@@ -100,7 +100,7 @@ mapping withdraw:
 // The `credits` record is used to store credits privately.
 record credits:
     // The address of the owner.
-    owner as address.private;
+    actual_owner as address.private;
     // The amount of private microcredits that belong to the specified owner.
     microcredits as u64.private;
 

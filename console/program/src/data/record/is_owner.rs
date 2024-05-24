@@ -74,6 +74,8 @@ impl<N: Network> Record<N, Ciphertext<N>> {
 
 #[cfg(test)]
 mod tests {
+    use std::fs::{self, File};
+
     use super::*;
     use crate::Literal;
     use snarkvm_console_account::PrivateKey;
@@ -85,23 +87,59 @@ mod tests {
     const ITERATIONS: u64 = 1_000;
 
     fn check_is_owner<N: Network>(
+        file: &mut fs::File,
         view_key: ViewKey<N>,
         owner: Owner<N, Plaintext<N>>,
         rng: &mut TestRng,
     ) -> Result<()> {
         // Prepare the record.
         let randomizer = Scalar::rand(rng);
+        let nonce_to_use = N::g_scalar_multiply(&randomizer);
+        // println!("nonce_to_use: {:?}", nonce_to_use);
+        // println!("nonce x: {:?}", nonce_to_use.to_x_coordinate());
+        // println!("nonce y: {:?}", nonce_to_use.to_y_coordinate());
+        // println!("view key scalar: {:?}", **view_key);
+        // println!("owner address x: {:?}", view_key.to_address().to_x_coordinate());
+        // println!("owner address y: {:?}", view_key.to_address().to_y_coordinate());
         let record = Record {
             owner,
             data: IndexMap::from_iter(vec![
                 (Identifier::from_str("a")?, Entry::Private(Plaintext::from(Literal::Field(Field::rand(rng))))),
                 (Identifier::from_str("b")?, Entry::Private(Plaintext::from(Literal::Scalar(Scalar::rand(rng))))),
             ]),
-            nonce: N::g_scalar_multiply(&randomizer),
+            nonce: nonce_to_use,
         };
 
         // Encrypt the record.
         let ciphertext = record.encrypt(randomizer)?;
+
+        match &ciphertext.owner {
+            Owner::Public(owner) => {
+                println!("unencrypted owner x: {:?}", owner.to_x_coordinate());
+                println!("unencrypted owner y: {:?}", owner.to_y_coordinate());
+            }
+            Owner::Private(ciphertext) => {
+                // println!("encrypted owner x: {:?}", ciphertext[0]);
+                // print multiple lines in the format of:
+                // {
+                //   "transition_id": "au19kxv922l2s5cx9e58r08p0f6w5vt5tcde9wwra937ux8ppuk6yzq2pcgg4",
+                //   "nonce_x": "251177372049600189482197429390397796266018568297541178545240074020288598514",
+                //   "nonce_y": "6249265362832442135861461570942059724436225086028474204208688225599637084489",
+                //   "owner_x": "296095557076246474285179298247870355682512885115572813674288110571104591733",
+                //   "output_index": 0
+                // },
+                println!("{{");
+                // set semi random transition id, just for keeping track of the tested ciphertext
+                println!("\"transition_id\": \"{}\",", strip_letter_chars(nonce_to_use.to_x_coordinate().to_string()));
+                println!("\"nonce_x\": \"{}\",", strip_letter_chars(nonce_to_use.to_x_coordinate().to_string()));
+                println!("\"nonce_y\": \"{}\",", strip_letter_chars(nonce_to_use.to_y_coordinate().to_string()));
+                println!("\"owner_x\": \"{}\",", strip_letter_chars(ciphertext[0].to_string()));
+                println!("\"output_index\": 0");
+                println!("}},");
+                let output_string = format!("{{\n\"transition_id\": \"{}\",\n\"nonce_x\": \"{}\",\n\"nonce_y\": \"{}\",\n\"owner_x\": \"{}\",\n\"output_index\": 0\n}},\n", strip_letter_chars(nonce_to_use.to_x_coordinate().to_string()), strip_letter_chars(nonce_to_use.to_x_coordinate().to_string()), strip_letter_chars(nonce_to_use.to_y_coordinate().to_string()), strip_letter_chars(ciphertext[0].to_string()));
+                file.write_all(output_string.as_bytes())?;
+            }
+        }
 
         // Ensure the record belongs to the owner.
         assert!(ciphertext.is_owner(&view_key));
@@ -116,23 +154,37 @@ mod tests {
         Ok(())
     }
 
+    fn strip_letter_chars(s: String) -> String {
+        s.chars().filter(|c| c.is_numeric()).collect()
+    }
+
     #[test]
     fn test_is_owner() -> Result<()> {
         let mut rng = TestRng::default();
 
-        for _ in 0..ITERATIONS {
-            // Sample a view key and address.
-            let private_key = PrivateKey::<CurrentNetwork>::new(&mut rng)?;
-            let view_key = ViewKey::try_from(&private_key)?;
-            let address = Address::try_from(&private_key)?;
+        // Sample a view key and address.
+        let private_key = PrivateKey::<CurrentNetwork>::new(&mut rng)?;
+        let view_key = ViewKey::try_from(&private_key)?;
+        let address = Address::try_from(&private_key)?;
 
+        println!("view key scalar: {:?}", **view_key);
+        println!("address x: {:?}", address.to_x_coordinate());
+
+        // create file to store output to
+        let mut file = File::create("output.txt")?;
+
+        // append view key scalar and address x to file
+        file.write_all(format!("view key scalar: {:?}\n", **view_key).as_bytes())?;
+        file.write_all(format!("address x: {:?}\n", address.to_x_coordinate()).as_bytes())?;
+
+        for _ in 0..1_000 {
             // Public owner.
-            let owner = Owner::Public(address);
-            check_is_owner::<CurrentNetwork>(view_key, owner, &mut rng)?;
+            // let owner = Owner::Public(address);
+            // check_is_owner::<CurrentNetwork>(view_key, owner, &mut rng)?;
 
             // Private owner.
             let owner = Owner::Private(Plaintext::from(Literal::Address(address)));
-            check_is_owner::<CurrentNetwork>(view_key, owner, &mut rng)?;
+            check_is_owner::<CurrentNetwork>(&mut file, view_key, owner, &mut rng)?;
         }
         Ok(())
     }
