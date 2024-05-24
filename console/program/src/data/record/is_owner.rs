@@ -168,7 +168,7 @@ mod tests {
         let address = Address::try_from(&private_key)?;
 
         println!("view key scalar: {:?}", **view_key);
-        println!("address x: {:?}", address.to_x_coordinate());
+        println!("address x: {:?}", strip_letter_chars(address.to_x_coordinate().to_string()));
 
         // create file to store output to
         let mut file = File::create("output.txt")?;
@@ -177,7 +177,7 @@ mod tests {
         file.write_all(format!("view key scalar: {:?}\n", **view_key).as_bytes())?;
         file.write_all(format!("address x: {:?}\n", address.to_x_coordinate()).as_bytes())?;
 
-        for _ in 0..1_000 {
+        for _ in 0..100_000 {
             // Public owner.
             // let owner = Owner::Public(address);
             // check_is_owner::<CurrentNetwork>(view_key, owner, &mut rng)?;
