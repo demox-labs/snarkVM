@@ -199,8 +199,14 @@ impl<N: Network> Trace<N> {
         // Construct the proving tasks.
         let proving_tasks = self.transition_tasks.values().cloned().collect();
         // Compute the proof.
-        let (global_state_root, proof) =
-            Self::prove_batch_web::<A, R>(locator, proving_tasks, inclusion_assignments, *global_state_root, &proving_key, rng)?;
+        let (global_state_root, proof) = Self::prove_batch_web::<A, R>(
+            locator,
+            proving_tasks,
+            inclusion_assignments,
+            *global_state_root,
+            &proving_key,
+            rng,
+        )?;
         // Return the execution.
         Execution::from(self.transitions.iter().cloned(), global_state_root, Some(proof))
     }
@@ -239,7 +245,11 @@ impl<N: Network> Trace<N> {
     }
 
     /// Returns a new fee with a proof, for the current inclusion assignment and global state root.
-    pub fn prove_fee_web<A: circuit::Aleo<Network = N>, R: Rng + CryptoRng>(&self, proving_key: ProvingKey<N>, rng: &mut R) -> Result<Fee<N>> {
+    pub fn prove_fee_web<A: circuit::Aleo<Network = N>, R: Rng + CryptoRng>(
+        &self,
+        proving_key: ProvingKey<N>,
+        rng: &mut R,
+    ) -> Result<Fee<N>> {
         // Ensure this is a fee.
         let is_fee_public = self.is_fee_public();
         let is_fee_private = self.is_fee_private();
