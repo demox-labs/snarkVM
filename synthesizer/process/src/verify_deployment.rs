@@ -68,4 +68,23 @@ mod tests {
 
         bail!("\n\nRemember to #[ignore] this test!\n\n")
     }
+
+    #[test]
+    fn test_profiler_mtsp() -> Result<()> {
+        let rng = &mut TestRng::default();
+
+        // Initialize the process.
+        let process = Process::load()?;
+
+        // Fetch the large program to deploy.
+        let large_program = Program::from_str(include_str!("./resources/multi_token_standard_program.aleo"))?;
+
+        // Create a deployment for the program.
+        let deployment = process.deploy::<CurrentAleo, _>(&large_program, rng)?;
+
+        // Verify the deployment.
+        assert!(process.verify_deployment::<CurrentAleo, _>(&deployment, rng).is_ok());
+
+        Ok(())
+    }
 }
