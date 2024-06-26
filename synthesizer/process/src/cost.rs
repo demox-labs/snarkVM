@@ -451,6 +451,25 @@ function over_five_thousand:
     }
 
     #[test]
+    fn test_pondo_oracle_cost() -> Result<()> {
+        // Test the cost of an execution.
+        let mut process = Process::load().unwrap();
+
+        let program = Program::from_str(include_str!("./resources/pondo_oracle.aleo"))?;
+
+        // Get the program identifiers.
+        let update_identifier = Identifier::from_str("update_validator_data").unwrap();
+
+        let execution = get_execution(&mut process, &program, &update_identifier, ["aleo1qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq3ljyzc"].into_iter());
+        let result = execution_cost(&process, &execution).unwrap();
+
+        // Print the result
+        println!("Pondo Oracle Execution Cost: {:?}", result);
+
+        Ok(())
+    }
+
+    #[test]
     fn test_storage_costs_compute_correctly() {
         // Test the storage cost of an execution.
         let threshold = MainnetV0::EXECUTION_STORAGE_PENALTY_THRESHOLD;
