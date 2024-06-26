@@ -18,18 +18,20 @@ pub use genesis::*;
 pub mod powers;
 pub use powers::*;
 
-const REMOTE_URL: &str = "https://s3-us-west-1.amazonaws.com/mainnet.parameters";
-const DEMOX_REMOTE_URL: &str = "https://aleo-public.s3.us-west-2.amazonaws.com/testnetbeta";
+/// The restrictions list as a JSON-compatible string.
+pub const RESTRICTIONS_LIST: &str = include_str!("./resources/restrictions.json");
+
+const REMOTE_URL: &str = "https://parameters.aleo.org/mainnet";
 
 // Degrees
 #[cfg(not(feature = "wasm"))]
 impl_local!(Degree15, "resources/", "powers-of-beta-15", "usrs");
 #[cfg(feature = "wasm")]
-impl_remote!(Degree15, DEMOX_REMOTE_URL, "resources/", "powers-of-beta-15", "usrs");
+impl_remote!(Degree15, REMOTE_URL, "resources/", "powers-of-beta-15", "usrs");
 #[cfg(not(feature = "wasm"))]
 impl_local!(Degree16, "resources/", "powers-of-beta-16", "usrs");
 #[cfg(feature = "wasm")]
-impl_remote!(Degree16, DEMOX_REMOTE_URL, "resources/", "powers-of-beta-16", "usrs");
+impl_remote!(Degree16, REMOTE_URL, "resources/", "powers-of-beta-16", "usrs");
 impl_remote!(Degree17, REMOTE_URL, "resources/", "powers-of-beta-17", "usrs");
 impl_remote!(Degree18, REMOTE_URL, "resources/", "powers-of-beta-18", "usrs");
 impl_remote!(Degree19, REMOTE_URL, "resources/", "powers-of-beta-19", "usrs");
