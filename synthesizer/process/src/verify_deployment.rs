@@ -82,6 +82,9 @@ mod tests {
         // Create a deployment for the program.
         let deployment = process.deploy::<CurrentAleo, _>(&large_program, rng)?;
 
+        // Print the number of constraints.
+        println!("!!!! Number of combined constraints: {}", &deployment.num_combined_constraints().unwrap());
+
         // Verify the deployment.
         assert!(process.verify_deployment::<CurrentAleo, _>(&deployment, rng).is_ok());
 
