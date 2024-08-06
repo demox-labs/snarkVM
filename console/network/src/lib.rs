@@ -97,14 +97,14 @@ pub trait Network:
     const GENESIS_TIMESTAMP: i64;
     /// The genesis block coinbase target.
     #[cfg(not(feature = "test"))]
-    const GENESIS_COINBASE_TARGET: u64 = (1u64 << 10).saturating_sub(1);
+    const GENESIS_COINBASE_TARGET: u64 = (1u64 << 29).saturating_sub(1);
     /// The genesis block coinbase target.
     /// This is deliberately set to a low value (32) for testing purposes only.
     #[cfg(feature = "test")]
     const GENESIS_COINBASE_TARGET: u64 = (1u64 << 5).saturating_sub(1);
     /// The genesis block proof target.
     #[cfg(not(feature = "test"))]
-    const GENESIS_PROOF_TARGET: u64 = 1u64 << 8;
+    const GENESIS_PROOF_TARGET: u64 = 1u64 << 27;
     /// The genesis block proof target.
     /// This is deliberately set to a low value (8) for testing purposes only.
     #[cfg(feature = "test")]
@@ -215,6 +215,8 @@ pub trait Network:
     type TransactionID: Bech32ID<Field<Self>>;
     /// The transition ID type.
     type TransitionID: Bech32ID<Field<Self>>;
+    /// The transmission checksum type.
+    type TransmissionChecksum: IntegerType;
 
     /// Returns the genesis block bytes.
     fn genesis_bytes() -> &'static [u8];
