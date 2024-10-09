@@ -28,44 +28,44 @@ const DEMOX_URL: &str = "https://aleo-public.s3.us-west-2.amazonaws.com/mainnet"
 #[cfg(not(feature = "wasm"))]
 impl_local!(Degree15, "resources/", "powers-of-beta-15", "usrs");
 #[cfg(feature = "wasm")]
-impl_remote!(Degree15, DEMOX_URL, "/", "powers-of-beta-15", "usrs");
+impl_remote!(Degree15, DEMOX_URL, "resources/", "powers-of-beta-15", "usrs");
 #[cfg(not(feature = "wasm"))]
 impl_local!(Degree16, "resources/", "powers-of-beta-16", "usrs");
 #[cfg(feature = "wasm")]
-impl_remote!(Degree16, DEMOX_URL, "/", "powers-of-beta-16", "usrs");
-impl_remote!(Degree17, DEMOX_URL, "/", "powers-of-beta-17", "usrs");
-impl_remote!(Degree18, DEMOX_URL, "/", "powers-of-beta-18", "usrs");
-impl_remote!(Degree19, DEMOX_URL, "/", "powers-of-beta-19", "usrs");
-impl_remote!(Degree20, DEMOX_URL, "/", "powers-of-beta-20", "usrs");
-impl_remote!(Degree21, DEMOX_URL, "/", "powers-of-beta-21", "usrs");
-impl_remote!(Degree22, DEMOX_URL, "/", "powers-of-beta-22", "usrs");
-impl_remote!(Degree23, DEMOX_URL, "/", "powers-of-beta-23", "usrs");
-impl_remote!(Degree24, DEMOX_URL, "/", "powers-of-beta-24", "usrs");
-impl_remote!(Degree25, DEMOX_URL, "/", "powers-of-beta-25", "usrs");
-impl_remote!(Degree26, DEMOX_URL, "/", "powers-of-beta-26", "usrs");
-impl_remote!(Degree27, DEMOX_URL, "/", "powers-of-beta-27", "usrs");
-impl_remote!(Degree28, DEMOX_URL, "/", "powers-of-beta-28", "usrs");
+impl_remote!(Degree16, DEMOX_URL, "resources/", "powers-of-beta-16", "usrs");
+impl_remote!(Degree17, DEMOX_URL, "resources/", "powers-of-beta-17", "usrs");
+impl_remote!(Degree18, DEMOX_URL, "resources/", "powers-of-beta-18", "usrs");
+impl_remote!(Degree19, DEMOX_URL, "resources/", "powers-of-beta-19", "usrs");
+impl_remote!(Degree20, DEMOX_URL, "resources/", "powers-of-beta-20", "usrs");
+impl_remote!(Degree21, DEMOX_URL, "resources/", "powers-of-beta-21", "usrs");
+impl_remote!(Degree22, DEMOX_URL, "resources/", "powers-of-beta-22", "usrs");
+impl_remote!(Degree23, DEMOX_URL, "resources/", "powers-of-beta-23", "usrs");
+impl_remote!(Degree24, DEMOX_URL, "resources/", "powers-of-beta-24", "usrs");
+impl_remote!(Degree25, DEMOX_URL, "resources/", "powers-of-beta-25", "usrs");
+impl_remote!(Degree26, DEMOX_URL, "resources/", "powers-of-beta-26", "usrs");
+impl_remote!(Degree27, DEMOX_URL, "resources/", "powers-of-beta-27", "usrs");
+impl_remote!(Degree28, DEMOX_URL, "resources/", "powers-of-beta-28", "usrs");
 
 // Shifted Degrees
 #[cfg(not(feature = "wasm"))]
 impl_local!(ShiftedDegree15, "resources/", "shifted-powers-of-beta-15", "usrs");
 #[cfg(feature = "wasm")]
-impl_remote!(ShiftedDegree15, DEMOX_URL, "/", "shifted-powers-of-beta-15", "usrs");
+impl_remote!(ShiftedDegree15, DEMOX_URL, "resources/", "shifted-powers-of-beta-15", "usrs");
 #[cfg(not(feature = "wasm"))]
 impl_local!(ShiftedDegree16, "resources/", "shifted-powers-of-beta-16", "usrs");
 #[cfg(feature = "wasm")]
-impl_remote!(ShiftedDegree16, DEMOX_URL, "/", "shifted-powers-of-beta-16", "usrs");
-impl_remote!(ShiftedDegree17, DEMOX_URL, "/", "shifted-powers-of-beta-17", "usrs");
-impl_remote!(ShiftedDegree18, DEMOX_URL, "/", "shifted-powers-of-beta-18", "usrs");
-impl_remote!(ShiftedDegree19, DEMOX_URL, "/", "shifted-powers-of-beta-19", "usrs");
-impl_remote!(ShiftedDegree20, DEMOX_URL, "/", "shifted-powers-of-beta-20", "usrs");
-impl_remote!(ShiftedDegree21, DEMOX_URL, "/", "shifted-powers-of-beta-21", "usrs");
-impl_remote!(ShiftedDegree22, DEMOX_URL, "/", "shifted-powers-of-beta-22", "usrs");
-impl_remote!(ShiftedDegree23, DEMOX_URL, "/", "shifted-powers-of-beta-23", "usrs");
-impl_remote!(ShiftedDegree24, DEMOX_URL, "/", "shifted-powers-of-beta-24", "usrs");
-impl_remote!(ShiftedDegree25, DEMOX_URL, "/", "shifted-powers-of-beta-25", "usrs");
-impl_remote!(ShiftedDegree26, DEMOX_URL, "/", "shifted-powers-of-beta-26", "usrs");
-impl_remote!(ShiftedDegree27, DEMOX_URL, "/", "shifted-powers-of-beta-27", "usrs");
+impl_remote!(ShiftedDegree16, DEMOX_URL, "resources/", "shifted-powers-of-beta-16", "usrs");
+impl_remote!(ShiftedDegree17, DEMOX_URL, "resources/", "shifted-powers-of-beta-17", "usrs");
+impl_remote!(ShiftedDegree18, DEMOX_URL, "resources/", "shifted-powers-of-beta-18", "usrs");
+impl_remote!(ShiftedDegree19, DEMOX_URL, "resources/", "shifted-powers-of-beta-19", "usrs");
+impl_remote!(ShiftedDegree20, DEMOX_URL, "resources/", "shifted-powers-of-beta-20", "usrs");
+impl_remote!(ShiftedDegree21, DEMOX_URL, "resources/", "shifted-powers-of-beta-21", "usrs");
+impl_remote!(ShiftedDegree22, DEMOX_URL, "resources/", "shifted-powers-of-beta-22", "usrs");
+impl_remote!(ShiftedDegree23, DEMOX_URL, "resources/", "shifted-powers-of-beta-23", "usrs");
+impl_remote!(ShiftedDegree24, DEMOX_URL, "resources/", "shifted-powers-of-beta-24", "usrs");
+impl_remote!(ShiftedDegree25, DEMOX_URL, "resources/", "shifted-powers-of-beta-25", "usrs");
+impl_remote!(ShiftedDegree26, DEMOX_URL, "resources/", "shifted-powers-of-beta-26", "usrs");
+impl_remote!(ShiftedDegree27, DEMOX_URL, "resources/", "shifted-powers-of-beta-27", "usrs");
 
 // Powers of Beta Times Gamma * G
 impl_local!(Gamma, "resources/", "powers-of-beta-gamma", "usrs");
@@ -75,46 +75,46 @@ impl_local!(NegBeta, "resources/", "neg-powers-of-beta", "usrs");
 impl_local!(BetaH, "resources/", "beta-h", "usrs");
 
 // BondPublic
-impl_remote!(BondPublicProver, DEMOX_URL, "/", "bond_public", "prover");
+impl_remote!(BondPublicProver, DEMOX_URL, "resources/", "bond_public", "prover");
 impl_local!(BondPublicVerifier, "resources/", "bond_public", "verifier");
 // BondValidator
-impl_remote!(BondValidatorProver, DEMOX_URL, "/", "bond_validator", "prover");
+impl_remote!(BondValidatorProver, DEMOX_URL, "resources/", "bond_validator", "prover");
 impl_local!(BondValidatorVerifier, "resources/", "bond_validator", "verifier");
 // UnbondPublic
-impl_remote!(UnbondPublicProver, DEMOX_URL, "/", "unbond_public", "prover");
+impl_remote!(UnbondPublicProver, DEMOX_URL, "resources/", "unbond_public", "prover");
 impl_local!(UnbondPublicVerifier, "resources/", "unbond_public", "verifier");
 // ClaimUnbondPublic
-impl_remote!(ClaimUnbondPublicProver, DEMOX_URL, "/", "claim_unbond_public", "prover");
+impl_remote!(ClaimUnbondPublicProver, DEMOX_URL, "resources/", "claim_unbond_public", "prover");
 impl_local!(ClaimUnbondPublicVerifier, "resources/", "claim_unbond_public", "verifier");
 // SetValidatorState
-impl_remote!(SetValidatorStateProver, DEMOX_URL, "/", "set_validator_state", "prover");
+impl_remote!(SetValidatorStateProver, DEMOX_URL, "resources/", "set_validator_state", "prover");
 impl_local!(SetValidatorStateVerifier, "resources/", "set_validator_state", "verifier");
 // TransferPrivate
-impl_remote!(TransferPrivateProver, DEMOX_URL, "/", "transfer_private", "prover");
+impl_remote!(TransferPrivateProver, DEMOX_URL, "resources/", "transfer_private", "prover");
 impl_local!(TransferPrivateVerifier, "resources/", "transfer_private", "verifier");
 // TransferPublic
-impl_remote!(TransferPublicProver, DEMOX_URL, "/", "transfer_public", "prover");
+impl_remote!(TransferPublicProver, DEMOX_URL, "resources/", "transfer_public", "prover");
 impl_local!(TransferPublicVerifier, "resources/", "transfer_public", "verifier");
 // TransferPublicAsSigner
-impl_remote!(TransferPublicAsSignerProver, DEMOX_URL, "/", "transfer_public_as_signer", "prover");
+impl_remote!(TransferPublicAsSignerProver, DEMOX_URL, "resources/", "transfer_public_as_signer", "prover");
 impl_local!(TransferPublicAsSignerVerifier, "resources/", "transfer_public_as_signer", "verifier");
 // TransferPrivateToPublic
-impl_remote!(TransferPrivateToPublicProver, DEMOX_URL, "/", "transfer_private_to_public", "prover");
+impl_remote!(TransferPrivateToPublicProver, DEMOX_URL, "resources/", "transfer_private_to_public", "prover");
 impl_local!(TransferPrivateToPublicVerifier, "resources/", "transfer_private_to_public", "verifier");
 // TransferPublicToPrivate
-impl_remote!(TransferPublicToPrivateProver, DEMOX_URL, "/", "transfer_public_to_private", "prover");
+impl_remote!(TransferPublicToPrivateProver, DEMOX_URL, "resources/", "transfer_public_to_private", "prover");
 impl_local!(TransferPublicToPrivateVerifier, "resources/", "transfer_public_to_private", "verifier");
 // Join
-impl_remote!(JoinProver, DEMOX_URL, "/", "join", "prover");
+impl_remote!(JoinProver, DEMOX_URL, "resources/", "join", "prover");
 impl_local!(JoinVerifier, "resources/", "join", "verifier");
 // Split
-impl_remote!(SplitProver, DEMOX_URL, "/", "split", "prover");
+impl_remote!(SplitProver, DEMOX_URL, "resources/", "split", "prover");
 impl_local!(SplitVerifier, "resources/", "split", "verifier");
 // FeePrivate
-impl_remote!(FeePrivateProver, DEMOX_URL, "/", "fee_private", "prover");
+impl_remote!(FeePrivateProver, DEMOX_URL, "resources/", "fee_private", "prover");
 impl_local!(FeePrivateVerifier, "resources/", "fee_private", "verifier");
 // FeePublic
-impl_remote!(FeePublicProver, DEMOX_URL, "/", "fee_public", "prover");
+impl_remote!(FeePublicProver, DEMOX_URL, "resources/", "fee_public", "prover");
 impl_local!(FeePublicVerifier, "resources/", "fee_public", "verifier");
 
 #[macro_export]
@@ -153,7 +153,7 @@ macro_rules! insert_key {
 }
 
 // Inclusion
-impl_remote!(InclusionProver, REMOTE_URL, "resources/", "inclusion", "prover");
+impl_remote!(InclusionProver, DEMOX_URL, "resources/", "inclusion", "prover");
 impl_local!(InclusionVerifier, "resources/", "inclusion", "verifier");
 
 /// The function name for the inclusion circuit.
