@@ -27,7 +27,7 @@ impl<N: Network> Record<N, Ciphertext<N>> {
         address_x_coordinate: Field<N>,
         view_key_scalar: Scalar<N>,
         record_nonce: Group<N>,
-        record_owner_x_coordinate: Field<N>,
+        record_owner_x_coordinate: Field<N>
     ) -> bool {
         let record_view_key = (record_nonce * view_key_scalar).to_x_coordinate();
         // Compute the 0th randomizer.
