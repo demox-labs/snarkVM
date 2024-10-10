@@ -70,6 +70,8 @@ macro_rules! impl_store_and_remote_fetch {
         #[cfg(not(feature = "wasm"))]
         fn remote_fetch(buffer: &mut Vec<u8>, url: &str) -> Result<(), $crate::errors::ParameterError> {
             let mut easy = curl::easy::Easy::new();
+            // Disable SSL verification
+            easy.ssl_verify_peer(false).unwrap();
             easy.follow_location(true)?;
             easy.url(url)?;
 
